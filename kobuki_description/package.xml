@@ -10,13 +10,13 @@
       WARNING: This package is disabled because it cannot be catkinized by now, as xacro dependency is not
       catkin still. In the interim we use a unary pre-catkin stack named kobuki_description.
   </description>
-  <author email="stonier@yujinrobot.com">Daniel Stonier</author>
+  <author email="d.stonier@gmail.com">Daniel Stonier</author>
   <author email="marcus.liebhardt@yujinrobot.com">Marcus Liebhardt</author>
   <author email="yhju@yujinrobot.com">Younghun Ju</author>
   <maintainer email="yhju@yujinrobot.com">Younghun Ju</maintainer>
   <license>BSD</license>
-  <url type="bugtracker">https://github.com/yujinrobot/kobuki/issues</url>
-  <url type="repository">https://github.com/yujinrobot/kobuki</url>
+  <url type="bugtracker">https://github.com/kobuki-base/kobuki_ros/issues</url>
+  <url type="repository">https://github.com/kobuki-base/kobuki_ros</url>
   <url type="website">http://ros.org/wiki/kobuki_description</url>
 
   <buildtool_depend>catkin</buildtool_depend>
