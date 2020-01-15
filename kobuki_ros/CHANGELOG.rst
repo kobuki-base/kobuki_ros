@@ -2,7 +2,7 @@
 Changelog for package kobuki
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-0.8.0 (2020-01-14)
+1.0.0 (2020-01-14)
 ------------------
 * first release on eloquent
 

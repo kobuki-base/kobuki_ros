@@ -1,6 +1,6 @@
 <package>
   <name>kobuki_ros</name>
-  <version>0.8.0</version>
+  <version>1.0.0</version>
   <description>
     ROS2 runtime software for Kobuki, Yujin Robot's mobile research base.
   </description>
