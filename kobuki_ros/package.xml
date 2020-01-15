@@ -1,0 +1,34 @@
+<package>
+  <name>kobuki_ros</name>
+  <version>0.8.0</version>
+  <description>
+    ROS2 runtime software for Kobuki, Yujin Robot's mobile research base.
+  </description>
+  <author>Daniel Stonier</author>
+  <author>Younghun Ju</author>
+  <author>Jorge Santos Simon</author>
+  <author>Marcus Liebhardt</author>
+  <maintainer email="d.stonier@gmail.com">Daniel Stonier</maintainer>
+  <license>BSD</license>
+  <url type="bugtracker">https://github.com/kobuki-base/kobuki_ros/issues</url>
+  <url type="repository">https://github.com/kobuki-base/kobuki_ros</url>
+  <url type="website">http://ros.org/wiki/kobuki</url>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- 
+  <exec_depend>kobuki_auto_docking</exec_depend>
+  <exec_depend>kobuki_bumper2pc</exec_depend>
+  <exec_depend>kobuki_controller_tutorial</exec_depend>
+  <exec_depend>kobuki_description</exec_depend> 
+  <exec_depend>kobuki_keyop</exec_depend>
+  <exec_depend>kobuki_node</exec_depend>
+  <exec_depend>kobuki_random_walker</exec_depend>
+  <exec_depend>kobuki_safety_controller</exec_depend>
+  <exec_depend>kobuki_testsuite</exec_depend>
+   -->
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
