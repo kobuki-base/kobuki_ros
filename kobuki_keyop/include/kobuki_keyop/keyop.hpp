@@ -28,7 +28,7 @@
  */
 
 /**
- * @file /include/teleop_core/keyop_core.hpp
+ * @file /include/kobuki_keyop/keyop.hpp
  *
  * @brief The controlling node for remote operations on robot_core.
  *
@@ -38,25 +38,32 @@
  ** Ifdefs
  *****************************************************************************/
 
-#ifndef KEYOP_CORE_NODE_HPP_
-#define KEYOP_CORE_NODE_HPP_
+#ifndef KEYOP_HPP_
+#define KEYOP_HPP_
 
 /*****************************************************************************
  ** Includes
  *****************************************************************************/
 
-#include <ros/ros.h>
 #include <termios.h> // for keyboard input
-#include <ecl/threads.hpp>
-#include <geometry_msgs/Twist.h>  // for velocity commands
-#include <geometry_msgs/TwistStamped.h>  // for velocity commands
-#include <kobuki_msgs/KeyboardInput.h> // keycodes from remote teleops.
+
+#include <memory>
+#include <mutex>
+#include <thread>
+#include <vector>
+
+#include <geometry_msgs/msg/twist.hpp>  // for velocity commands
+#include <rcl_interfaces/msg/set_parameters_result.hpp>
+#include <rclcpp/rclcpp.hpp>
+
+#include <kobuki_ros_interfaces/msg/keyboard_input.hpp> // keycodes from remote teleops.
+#include <kobuki_ros_interfaces/msg/motor_power.hpp>
 
 /*****************************************************************************
  ** Namespaces
  *****************************************************************************/
 
-namespace keyop_core
+namespace kobuki_keyop
 {
 
 /*****************************************************************************
@@ -66,34 +73,38 @@ namespace keyop_core
  * @brief Keyboard remote control for our robot core (mobile base).
  *
  */
-class KeyOpCore
+class KeyOp final : public rclcpp::Node
 {
 public:
   /*********************
    ** C&D
    **********************/
-  KeyOpCore();
-  ~KeyOpCore();
-  bool init();
+  explicit KeyOp(const rclcpp::NodeOptions & options);
+  ~KeyOp() override;
+  KeyOp(KeyOp && c) = delete;
+  KeyOp & operator=(KeyOp && c) = delete;
+  KeyOp(const KeyOp & c) = delete;
+  KeyOp & operator=(const KeyOp & c) = delete;
+
+private:
+  rclcpp::Subscription<kobuki_ros_interfaces::msg::KeyboardInput>::SharedPtr keyinput_subscriber_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr velocity_publisher_;
+  rclcpp::Publisher<kobuki_ros_interfaces::msg::MotorPower>::SharedPtr motor_power_publisher_;
+  bool last_zero_vel_sent_;
+  bool power_status_;
+  // protects against concurrent access to cmd_ (and friends) by the thread
+  // dealing with keyboard strokes and remote keyboard strokes
+  std::mutex cmd_mutex_;
+  std::shared_ptr<geometry_msgs::msg::Twist> cmd_;
+  double linear_vel_step_, linear_vel_max_;
+  double angular_vel_step_, angular_vel_max_;
+  rclcpp::TimerBase::SharedPtr timer_;
+  rcl_interfaces::msg::SetParametersResult parameterUpdate(const std::vector<rclcpp::Parameter> & parameters);
 
   /*********************
    ** Runtime
    **********************/
   void spin();
-
-private:
-  ros::Subscriber keyinput_subscriber;
-  ros::Publisher velocity_publisher_;
-  ros::Publisher motor_power_publisher_;
-  bool last_zero_vel_sent;
-  bool accept_incoming;
-  bool power_status;
-  bool wait_for_connection_;
-  geometry_msgs::TwistPtr cmd;
-  geometry_msgs::TwistStampedPtr cmd_stamped;
-  double linear_vel_step, linear_vel_max;
-  double angular_vel_step, angular_vel_max;
-  std::string name;
 
   /*********************
    ** Commands
@@ -112,14 +123,14 @@ private:
 
   void keyboardInputLoop();
   void processKeyboardInput(char c);
-  void remoteKeyInputReceived(const kobuki_msgs::KeyboardInput& key);
+  void remoteKeyInputReceived(const std::shared_ptr<kobuki_ros_interfaces::msg::KeyboardInput> key);
   void restoreTerminal();
-  bool quit_requested;
-  int key_file_descriptor;
-  struct termios original_terminal_state;
-  ecl::Thread thread;
+  bool quit_requested_;
+  int key_file_descriptor_;
+  struct termios original_terminal_state_;
+  std::thread thread_;
 };
 
-} // namespace keyop_core
+} // namespace kobuki_keyop
 
-#endif /* KEYOP_CORE_NODE_HPP_ */
+#endif /* KEYOP_HPP_ */

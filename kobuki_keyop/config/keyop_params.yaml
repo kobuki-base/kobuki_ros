@@ -1,0 +1,6 @@
+kobuki_keyop_node:
+  ros__parameters:
+    linear_vel_step: 0.1
+    linear_vel_max: 3.4
+    angular_vel_step: 0.02
+    angular_vel_max: 1.2

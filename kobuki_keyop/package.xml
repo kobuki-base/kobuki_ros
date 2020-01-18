@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>kobuki_keyop</name>
   <version>0.7.6</version>
   <description>
@@ -11,38 +11,33 @@
   <url type="repository">https://github.com/kobuki-base/kobuki_ros</url>
   <url type="website">http://ros.org/wiki/kobuki_keyop</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
   <!-- Ros -->
   <build_depend>geometry_msgs</build_depend>
-  <build_depend>std_srvs</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>roscpp</build_depend>
+  <build_depend>rcl_interfaces</build_depend>
+  <build_depend>rclcpp</build_depend>
+  <build_depend>rclcpp_components</build_depend>
 
   <!-- Ecl -->
-  <build_depend>ecl_exceptions</build_depend>
-  <build_depend>ecl_threads</build_depend>
-  <build_depend>ecl_time</build_depend>
+  <build_depend>ecl_build</build_depend>
 
   <!-- Kobuki -->
-  <build_depend>kobuki_msgs</build_depend>
+  <build_depend>kobuki_ros_interfaces</build_depend>
 
 
   <!-- Ros -->
-  <run_depend>geometry_msgs</run_depend>
-  <run_depend>std_srvs</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>roscpp</run_depend>
-
-  <!-- Ecl -->
-  <run_depend>ecl_exceptions</run_depend>
-  <run_depend>ecl_threads</run_depend>
-  <run_depend>ecl_time</run_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>rcl_interfaces</exec_depend>
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>rclcpp_components</exec_depend>
 
   <!-- Kobuki -->
-  <run_depend>kobuki_msgs</run_depend>
-  
-  <!-- Yujin ocs -->
-  <run_depend>yocs_cmd_vel_mux</run_depend>
-  <run_depend>yocs_velocity_smoother</run_depend>
+  <exec_depend>kobuki_cmd_vel_mux</exec_depend>
+  <exec_depend>kobuki_ros_interfaces</exec_depend>
+  <exec_depend>kobuki_velocity_smoother</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
