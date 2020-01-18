@@ -1,0 +1,3 @@
+kobuki_safety_controller_node:
+  ros__parameters:
+    time_to_extend_bump_cliff_events: 0.0
