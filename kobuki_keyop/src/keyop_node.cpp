@@ -36,7 +36,7 @@
 
 int main(int argc, char** argv)
 {
-  // Force flush of the stdout buffer.
+  // Configures stdout stream for no buffering
   setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
 
   rclcpp::init(argc, argv);

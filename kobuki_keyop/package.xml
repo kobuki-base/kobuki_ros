@@ -9,7 +9,7 @@
   <license>BSD</license>
   <url type="bugtracker">https://github.com/kobuki-base/kobuki_ros/issues</url>
   <url type="repository">https://github.com/kobuki-base/kobuki_ros</url>
-  <url type="website">http://ros.org/wiki/kobuki_keyop</url>
+  <url type="website">https://index.ros.org/p/kobuki_keyop/github-kobuki-base-kobuki_ros</url>
 
   <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
@@ -33,9 +33,9 @@
   <exec_depend>rclcpp_components</exec_depend>
 
   <!-- Kobuki -->
-  <exec_depend>kobuki_cmd_vel_mux</exec_depend>
+  <exec_depend>cmd_vel_mux</exec_depend>
   <exec_depend>kobuki_ros_interfaces</exec_depend>
-  <exec_depend>kobuki_velocity_smoother</exec_depend>
+  <exec_depend>velocity_smoother</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

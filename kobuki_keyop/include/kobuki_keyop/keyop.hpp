@@ -38,8 +38,8 @@
  ** Ifdefs
  *****************************************************************************/
 
-#ifndef KEYOP_HPP_
-#define KEYOP_HPP_
+#ifndef KOBUKI_KEYOP_HPP_
+#define KOBUKI_KEYOP_HPP_
 
 /*****************************************************************************
  ** Includes
@@ -133,4 +133,4 @@ private:
 
 } // namespace kobuki_keyop
 
-#endif /* KEYOP_HPP_ */
+#endif /* KOBUKI_KEYOP_HPP_ */
