@@ -138,6 +138,8 @@ KeyOp::~KeyOp()
  */
 void KeyOp::spin()
 {
+  std::lock_guard<std::mutex> lk(cmd_mutex_);
+
   // Avoid spamming robot with continuous zero-velocity messages
   if ((cmd_->linear.x  != 0.0) || (cmd_->linear.y  != 0.0) || (cmd_->linear.z  != 0.0) ||
       (cmd_->angular.x != 0.0) || (cmd_->angular.y != 0.0) || (cmd_->angular.z != 0.0))
