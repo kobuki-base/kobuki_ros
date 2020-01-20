@@ -1,8 +1,8 @@
-<package>
+<package format="2">
   <name>kobuki_node</name>
   <version>0.7.6</version>
   <description>
-      ROS nodelet for Kobuki: ROS wrapper for the Kobuki driver.
+      ROS node for Kobuki: ROS wrapper for the Kobuki driver.
   </description>
   <author>Daniel Stonier</author>
   <author>Younghun Ju</author>
@@ -13,71 +13,62 @@
   <url type="repository">https://github.com/kobuki-base/kobuki_ros</url>
   <url type="website">http://ros.org/wiki/kobuki_node</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
   <!-- ROS -->
-  <build_depend>roscpp</build_depend>
-  <build_depend>geometry_msgs</build_depend>
-  <build_depend>sensor_msgs</build_depend>
-  <build_depend>nav_msgs</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>tf</build_depend>
   <build_depend>angles</build_depend>
-  <build_depend>diagnostic_updater</build_depend>
   <build_depend>diagnostic_msgs</build_depend>
-  <build_depend>nodelet</build_depend>
-  <build_depend>pluginlib</build_depend>
+  <build_depend>diagnostic_updater</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>rclcpp</build_depend>
+  <build_depend>rclcpp_components</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>tf2_ros</build_depend>
 
   <!-- Kobuki -->
-  <build_depend>kobuki_msgs</build_depend>
   <build_depend>kobuki_driver</build_depend>
-  <build_depend>kobuki_ftdi</build_depend>
-  <build_depend>kobuki_keyop</build_depend>
-  <build_depend>kobuki_safety_controller</build_depend>
+  <build_depend>kobuki_ros_interfaces</build_depend>
 
   <!-- ECL -->
+  <build_depend>ecl_build</build_depend>
+  <build_depend>ecl_errors</build_depend>
   <build_depend>ecl_exceptions</build_depend>
+  <build_depend>ecl_geometry</build_depend>
+  <build_depend>ecl_linear_algebra</build_depend>
   <build_depend>ecl_sigslots</build_depend>
-  <build_depend>ecl_streams</build_depend>
-  <build_depend>ecl_threads</build_depend>
-
-  <!-- For Tests -->
-  <build_depend>rospy</build_depend>
 
 
   <!-- ROS -->
-  <run_depend>capabilities</run_depend>
-  <run_depend>roscpp</run_depend>
-  <run_depend>geometry_msgs</run_depend>
-  <run_depend>sensor_msgs</run_depend>
-  <run_depend>nav_msgs</run_depend>
-  <run_depend>std_msgs</run_depend>
-  <run_depend>tf</run_depend>
-  <run_depend>angles</run_depend>
-  <run_depend>diagnostic_aggregator</run_depend>
-  <run_depend>diagnostic_updater</run_depend>
-  <run_depend>diagnostic_msgs</run_depend>
-  <run_depend>nodelet</run_depend>
-  <run_depend>pluginlib</run_depend>
+  <exec_depend>diagnostic_aggregator</exec_depend>
+  <exec_depend>diagnostic_msgs</exec_depend>
+  <exec_depend>diagnostic_updater</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>rclcpp_components</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
 
   <!-- Kobuki -->
-  <run_depend>kobuki_rapps</run_depend>
-  <run_depend>kobuki_msgs</run_depend>
-  <run_depend>kobuki_driver</run_depend>
-  <run_depend>kobuki_ftdi</run_depend>
-  <run_depend>kobuki_keyop</run_depend>
-  <run_depend>kobuki_safety_controller</run_depend>
+  <exec_depend>kobuki_driver</exec_depend>
+  <exec_depend>kobuki_ftdi</exec_depend>
+  <exec_depend>kobuki_keyop</exec_depend>
+  <exec_depend>kobuki_ros_interfaces</exec_depend>
+  <exec_depend>kobuki_safety_controller</exec_depend>
 
   <!-- ECL -->
-  <run_depend>ecl_exceptions</run_depend>
-  <run_depend>ecl_sigslots</run_depend>
-  <run_depend>ecl_streams</run_depend>
-  <run_depend>ecl_threads</run_depend>
+  <exec_depend>ecl_errors</exec_depend>
+  <exec_depend>ecl_exceptions</exec_depend>
+  <exec_depend>ecl_geometry</exec_depend>
+  <exec_depend>ecl_linear_algebra</exec_depend>
+  <exec_depend>ecl_sigslots</exec_depend>
 
-  <!-- For Tests -->
-  <run_depend>rospy</run_depend>
-  
   <export>
-    <nodelet plugin="${prefix}/plugins/nodelet_plugins.xml" />
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
