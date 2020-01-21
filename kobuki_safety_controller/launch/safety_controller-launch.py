@@ -43,6 +43,12 @@ import yaml
 
 def generate_launch_description():
     share_dir = ament_index_python.packages.get_package_share_directory('kobuki_safety_controller')
+    # There are two different ways to pass parameters to a non-composed node;
+    # either by specifying the path to the file containing the parameters, or by
+    # passing a dictionary containing the key -> value pairs of the parameters.
+    # When starting a *composed* node on the other hand, only the dictionary
+    # style is supported.  To keep the code between the non-composed and
+    # composed launch file similar, we use that style here as well.
     params_file = os.path.join(share_dir, 'config', 'safety_controller_params.yaml')
     with open(params_file, 'r') as f:
         params = yaml.safe_load(f)['kobuki_safety_controller_node']['ros__parameters']
