@@ -98,6 +98,7 @@ private:
   rclcpp::Duration time_to_extend_bump_cliff_events_;
   rclcpp::Time last_event_time_;
   rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_cb_;
 
   std::unique_ptr<geometry_msgs::msg::Twist> msg_; // velocity command
 
