@@ -99,6 +99,7 @@ private:
   double linear_vel_step_, linear_vel_max_;
   double angular_vel_step_, angular_vel_max_;
   rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_cb_;
   rcl_interfaces::msg::SetParametersResult parameterUpdate(const std::vector<rclcpp::Parameter> & parameters);
 
   /*********************

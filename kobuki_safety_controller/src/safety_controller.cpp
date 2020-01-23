@@ -28,9 +28,9 @@
  */
 
 /**
- * @file /kobuki_safety_controller/src/nodelet.cpp
+ * @file /kobuki_safety_controller/src/safety_controller.cpp
  *
- * @brief Implementation for Kobuki's safety controller nodelet
+ * @brief Implementation for Kobuki's safety controller
  *
  * @author Marcus Liebhardt, Yujin Robot
  *
@@ -90,6 +90,10 @@ SafetyController::SafetyController(const rclcpp::NodeOptions & options) :
   msg_ = std::make_unique<geometry_msgs::msg::Twist>();
 
   timer_ = this->create_wall_timer(std::chrono::milliseconds(100), std::bind(&SafetyController::spin, this));
+
+  param_cb_ =
+    add_on_set_parameters_callback(std::bind(&SafetyController::parameterUpdate, this,
+      std::placeholders::_1));
 }
 
 SafetyController:: ~SafetyController()

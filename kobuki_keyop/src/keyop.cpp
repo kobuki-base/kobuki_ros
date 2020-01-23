@@ -115,6 +115,10 @@ KeyOp::KeyOp(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki_keyop_n
 
   timer_ = this->create_wall_timer(std::chrono::milliseconds(100), std::bind(&KeyOp::spin, this));
 
+  param_cb_ =
+    add_on_set_parameters_callback(std::bind(&KeyOp::parameterUpdate, this,
+      std::placeholders::_1));
+
   // start keyboard input thread
   thread_ = std::thread(&KeyOp::keyboardInputLoop, this);
 }
