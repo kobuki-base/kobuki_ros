@@ -6,10 +6,16 @@ find_package(angles REQUIRED)
 find_package(diagnostic_msgs REQUIRED)
 find_package(diagnostic_updater REQUIRED)
 find_package(ecl_build REQUIRED)
+# TODO(clalancette): ecl_devices is a recursive dependency of kobuki_driver, but
+# isn't being picked up properly for some reason.  Figure this out.
+find_package(ecl_devices REQUIRED)
 find_package(ecl_errors REQUIRED)
 find_package(ecl_exceptions REQUIRED)
 find_package(ecl_geometry REQUIRED)
 find_package(ecl_linear_algebra REQUIRED)
+# TODO(clalancette): ecl_mobile_robot is a recursive dependency of kobuki_driver,
+# but isn't being picked up properly for some reason.  Figure this out.
+find_package(ecl_mobile_robot REQUIRED)
 find_package(ecl_sigslots REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(kobuki_driver REQUIRED)
@@ -36,11 +42,6 @@ ament_target_dependencies(kobuki_ros
   "angles"
   "diagnostic_msgs"
   "diagnostic_updater"
-  "ecl_errors"
-  "ecl_exceptions"
-  "ecl_geometry"
-  "ecl_linear_algebra"
-  "ecl_sigslots"
   "geometry_msgs"
   "kobuki_driver"
   "kobuki_ros_interfaces"
@@ -54,7 +55,10 @@ ament_target_dependencies(kobuki_ros
 )
 target_link_libraries(kobuki_ros
   ecl_devices::ecl_devices
+  ecl_errors::ecl_errors
+  ecl_exceptions::ecl_exceptions
   ecl_geometry::ecl_geometry
+  ecl_linear_algebra::ecl_linear_algebra
   ecl_mobile_robot::ecl_mobile_robot
   ecl_sigslots::ecl_sigslots
 )

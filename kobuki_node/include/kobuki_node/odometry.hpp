@@ -25,6 +25,7 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include <ecl/geometry/legacy_pose2d.hpp>
+#include <ecl/linear_algebra.hpp>
 
 /*****************************************************************************
 ** Namespaces
@@ -42,17 +43,20 @@ namespace kobuki_node
  **/
 class Odometry final {
 public:
-  explicit Odometry(double cmd_vel_timeout, const std::string & odom_frame, const std::string & base_frame, bool publish_tf, bool use_imu_heading);
+  explicit Odometry(double cmd_vel_timeout, const std::string & odom_frame, const std::string & base_frame, bool publish_tf, bool use_imu_heading, const rclcpp::Time & now);
   bool commandTimeout(const rclcpp::Time & now) const;
-  geometry_msgs::msg::Quaternion update(const ecl::LegacyPose2D<double> &pose_update, ecl::linear_algebra::Vector3d &pose_update_rates,
-                                        double imu_heading, double imu_angular_velocity);
+  void update(const ecl::LegacyPose2D<double> &pose_update, ecl::linear_algebra::Vector3d &pose_update_rates,
+              double imu_heading, double imu_angular_velocity, const rclcpp::Time & now);
   void resetOdometry() { pose_.setIdentity(); }
   const rclcpp::Duration& timeout() const { return cmd_vel_timeout_; }
   void resetTimeout(const rclcpp::Time & now) { last_cmd_time_ = now; }
-  std::unique_ptr<geometry_msgs::msg::TransformStamped> getTransform(const geometry_msgs::msg::Quaternion &odom_quat, const rclcpp::Time & now);
-  std::unique_ptr<nav_msgs::msg::Odometry> getOdometry(const geometry_msgs::msg::Quaternion &odom_quat, const ecl::linear_algebra::Vector3d &pose_update_rates, const rclcpp::Time & now);
+  std::unique_ptr<geometry_msgs::msg::TransformStamped> getTransform();
+  std::unique_ptr<nav_msgs::msg::Odometry> getOdometry();
 
 private:
+  geometry_msgs::msg::Quaternion odom_quat_;
+  rclcpp::Time odom_quat_time_;
+  ecl::linear_algebra::Vector3d pose_update_rates_;
   ecl::LegacyPose2D<double> pose_;
   rclcpp::Duration cmd_vel_timeout_;
   std::string odom_frame_;

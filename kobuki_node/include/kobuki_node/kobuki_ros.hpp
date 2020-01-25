@@ -198,6 +198,7 @@ private:
   void rosInfo(const std::string &msg) { RCLCPP_INFO(get_logger(), "Kobuki : %s", msg.c_str()); }
   void rosWarn(const std::string &msg) { RCLCPP_WARN(get_logger(), "Kobuki : %s", msg); }
   void rosError(const std::string &msg) { RCLCPP_ERROR(get_logger(), "Kobuki : %s", msg); }
+  void rosFatal(const std::string &msg) { RCLCPP_FATAL(get_logger(), "Kobuki : %s", msg); }
   void rosNamed(const std::vector<std::string> &msgs) {
     if (msgs.size() == 0) {
       return;
@@ -219,7 +220,7 @@ private:
         rosError(msgs[1]);
       }
       else if (msgs[0] == "fatal") {
-        RCLCPP_FATAL(get_logger(), "Kobuki : %s", msgs[1]);
+        rosFatal(msgs[1]);
       }
     }
     if (msgs.size() == 3) {

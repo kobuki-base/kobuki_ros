@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>kobuki_node</name>
   <version>0.7.6</version>
@@ -11,62 +13,46 @@
   <license>BSD</license>
   <url type="bugtracker">https://github.com/kobuki-base/kobuki_ros/issues</url>
   <url type="repository">https://github.com/kobuki-base/kobuki_ros</url>
-  <url type="website">http://ros.org/wiki/kobuki_node</url>
+  <url type="website">https://index.ros.org/p/kobuki_node/github-kobuki-base-kobuki_ros</url>
 
   <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
   <!-- ROS -->
-  <build_depend>angles</build_depend>
-  <build_depend>diagnostic_msgs</build_depend>
-  <build_depend>diagnostic_updater</build_depend>
-  <build_depend>geometry_msgs</build_depend>
-  <build_depend>nav_msgs</build_depend>
-  <build_depend>rclcpp</build_depend>
-  <build_depend>rclcpp_components</build_depend>
-  <build_depend>sensor_msgs</build_depend>
-  <build_depend>std_msgs</build_depend>
-  <build_depend>tf2</build_depend>
-  <build_depend>tf2_ros</build_depend>
+  <depend>angles</depend>
+  <depend>diagnostic_msgs</depend>
+  <depend>diagnostic_updater</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
 
   <!-- Kobuki -->
-  <build_depend>kobuki_driver</build_depend>
-  <build_depend>kobuki_ros_interfaces</build_depend>
+  <depend>kobuki_driver</depend>
+  <depend>kobuki_ros_interfaces</depend>
+
+  <!-- ECL -->
+  <depend>ecl_devices</depend>
+  <depend>ecl_errors</depend>
+  <depend>ecl_exceptions</depend>
+  <depend>ecl_geometry</depend>
+  <depend>ecl_linear_algebra</depend>
+  <depend>ecl_mobile_robot</depend>
+  <depend>ecl_sigslots</depend>
 
   <!-- ECL -->
   <build_depend>ecl_build</build_depend>
-  <build_depend>ecl_errors</build_depend>
-  <build_depend>ecl_exceptions</build_depend>
-  <build_depend>ecl_geometry</build_depend>
-  <build_depend>ecl_linear_algebra</build_depend>
-  <build_depend>ecl_sigslots</build_depend>
-
 
   <!-- ROS -->
   <exec_depend>diagnostic_aggregator</exec_depend>
-  <exec_depend>diagnostic_msgs</exec_depend>
-  <exec_depend>diagnostic_updater</exec_depend>
-  <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>nav_msgs</exec_depend>
-  <exec_depend>rclcpp</exec_depend>
-  <exec_depend>rclcpp_components</exec_depend>
-  <exec_depend>sensor_msgs</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
-  <exec_depend>tf2</exec_depend>
-  <exec_depend>tf2_ros</exec_depend>
 
   <!-- Kobuki -->
-  <exec_depend>kobuki_driver</exec_depend>
   <exec_depend>kobuki_ftdi</exec_depend>
   <exec_depend>kobuki_keyop</exec_depend>
-  <exec_depend>kobuki_ros_interfaces</exec_depend>
   <exec_depend>kobuki_safety_controller</exec_depend>
-
-  <!-- ECL -->
-  <exec_depend>ecl_errors</exec_depend>
-  <exec_depend>ecl_exceptions</exec_depend>
-  <exec_depend>ecl_geometry</exec_depend>
-  <exec_depend>ecl_linear_algebra</exec_depend>
-  <exec_depend>ecl_sigslots</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -208,7 +208,7 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
 
   parameters.battery_dangerous = this->declare_parameter("battery_dangerous", kobuki::Battery::dangerous);
 
-  parameters.sigslots_namespace = "kobuki"; // name is automatically picked up by device_nodelet parent.
+  parameters.sigslots_namespace = "kobuki";  // configure the first part of the sigslot namespace
 
   parameters.device_port = this->declare_parameter("device_port", "");
   if (parameters.device_port.empty()) {
@@ -272,7 +272,7 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
     }
   }
 
-  odometry_ = std::make_unique<Odometry>(cmd_vel_timeout, odom_frame, base_frame, publish_tf, use_imu_heading);
+  odometry_ = std::make_unique<Odometry>(cmd_vel_timeout, odom_frame, base_frame, publish_tf, use_imu_heading, this->get_clock()->now());
 
   /*********************
    ** Driver Init
@@ -600,12 +600,12 @@ void KobukiRos::publishWheelState()
                               joint_states_.position[1], joint_states_.velocity[1]);  // right wheel
 
   // Update and publish odometry and joint states
-  geometry_msgs::msg::Quaternion odom_quat = odometry_->update(pose_update, pose_update_rates, kobuki_.getHeading(), kobuki_.getAngularVelocity());
-  std::unique_ptr<geometry_msgs::msg::TransformStamped> odom_update = odometry_->getTransform(odom_quat, this->get_clock()->now());
+  odometry_->update(pose_update, pose_update_rates, kobuki_.getHeading(), kobuki_.getAngularVelocity(), this->get_clock()->now());
+  std::unique_ptr<geometry_msgs::msg::TransformStamped> odom_update = odometry_->getTransform();
   if (odom_update != nullptr) {
     odom_broadcaster_->sendTransform(*odom_update);
   }
-  odom_publisher_->publish(std::move(odometry_->getOdometry(odom_quat, pose_update_rates, this->get_clock()->now())));
+  odom_publisher_->publish(std::move(odometry_->getOdometry()));
 
   joint_states_.header.stamp = this->get_clock()->now();
   joint_state_publisher_->publish(joint_states_);
