@@ -73,7 +73,7 @@ SafetyController::SafetyController(const rclcpp::NodeOptions & options) :
   cliff_center_detected_(false),
   cliff_right_detected_(false),
   time_to_extend_bump_cliff_events_(rclcpp::Duration(0.0)),
-  last_event_time_(rclcpp::Time(0))
+  last_event_time_(this->get_clock()->now())
 {
   //how long to keep sending messages after a bump, cliff, or wheel drop stops
   double time_to_extend_bump_cliff_events = this->declare_parameter("time_to_extend_bump_cliff_events", 0.0);
