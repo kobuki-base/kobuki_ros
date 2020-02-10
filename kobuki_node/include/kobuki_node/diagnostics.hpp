@@ -17,16 +17,19 @@
 ** Includes
 *****************************************************************************/
 
+#include <vector>
+
 #include <kobuki_driver/packets/cliff.hpp>
 #include <kobuki_driver/modules/battery.hpp>
 #include <kobuki_driver/packets/core_sensors.hpp>
-#include <diagnostic_updater/diagnostic_updater.h>
+#include <diagnostic_updater/diagnostic_updater.hpp>
 
 /*****************************************************************************
 ** Namespaces
 *****************************************************************************/
 
-namespace kobuki {
+namespace kobuki_node
+{
 
 /*****************************************************************************
 ** Interfaces
@@ -36,20 +39,20 @@ namespace kobuki {
 /**
  * Diagnostic checking the robot battery and charging status.
  */
-class BatteryTask : public diagnostic_updater::DiagnosticTask {
+class BatteryTask final : public diagnostic_updater::DiagnosticTask {
 public:
   BatteryTask() : DiagnosticTask("Battery") {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
-  void update(const Battery &battery) { status = battery; }
+  void update(const kobuki::Battery &battery) { status = battery; }
 
 private:
-  Battery status;
+  kobuki::Battery status;
 };
 
 /**
  * Simple diagnostic checking to see if kobuki is streaming data or not.
  */
-class WatchdogTask : public diagnostic_updater::DiagnosticTask {
+class WatchdogTask final : public diagnostic_updater::DiagnosticTask {
 public:
   WatchdogTask() : DiagnosticTask("Watchdog"), alive(false) {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
@@ -63,23 +66,24 @@ private:
 /**
  * Diagnostic checking the cliff sensors status.
  */
-class CliffSensorTask : public diagnostic_updater::DiagnosticTask {
+class CliffSensorTask final : public diagnostic_updater::DiagnosticTask {
 public:
   CliffSensorTask() : DiagnosticTask("Cliff Sensor") {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
-  void update(const uint8_t &new_status, const Cliff::Data &new_values) {
-    status = new_status; values = new_values;
+  void update(const uint8_t &new_status, const kobuki::Cliff::Data &new_values) {
+    status = new_status;
+    values = new_values;
   }
 
 private:
   uint8_t     status;
-  Cliff::Data values;
+  kobuki::Cliff::Data values;
 };
 
 /**
  * Diagnostic checking the wall sensors (aka bumpers) status.
  */
-class WallSensorTask : public diagnostic_updater::DiagnosticTask {
+class WallSensorTask final : public diagnostic_updater::DiagnosticTask {
 public:
   WallSensorTask() : DiagnosticTask("Wall Sensor") {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
@@ -92,7 +96,7 @@ private:
 /**
  * Diagnostic checking whether the wheels stay in contact with the ground.
  */
-class WheelDropTask : public diagnostic_updater::DiagnosticTask {
+class WheelDropTask final : public diagnostic_updater::DiagnosticTask {
 public:
   WheelDropTask() : DiagnosticTask("Wheel Drop") {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
@@ -106,7 +110,7 @@ private:
  * Diagnostic checking the current supplied to the motors, what
  * can be useful for detecting whether the robot is blocked.
  */
-class MotorCurrentTask : public diagnostic_updater::DiagnosticTask {
+class MotorCurrentTask final : public diagnostic_updater::DiagnosticTask {
 public:
   MotorCurrentTask() : DiagnosticTask("Motor Current") {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
@@ -119,7 +123,7 @@ private:
 /**
  * Diagnostic checking the on/off state of the motors
  */
-class MotorStateTask : public diagnostic_updater::DiagnosticTask {
+class MotorStateTask final : public diagnostic_updater::DiagnosticTask {
 public:
   MotorStateTask() : DiagnosticTask("Motor State") {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
@@ -132,7 +136,7 @@ private:
 /**
  * Diagnostic checking the gyro sensor status.
  */
-class GyroSensorTask : public diagnostic_updater::DiagnosticTask {
+class GyroSensorTask final : public diagnostic_updater::DiagnosticTask {
 public:
   GyroSensorTask() : DiagnosticTask("Gyro Sensor") {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
@@ -145,7 +149,7 @@ private:
 /**
  * Diagnostic checking the state of the digital input port (four bits).
  */
-class DigitalInputTask : public diagnostic_updater::DiagnosticTask {
+class DigitalInputTask final : public diagnostic_updater::DiagnosticTask {
 public:
   DigitalInputTask() : DiagnosticTask("Digital Input") {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
@@ -158,7 +162,7 @@ private:
 /**
  * Diagnostic checking the state of the analog input port (four short integers).
  */
-class AnalogInputTask : public diagnostic_updater::DiagnosticTask {
+class AnalogInputTask final : public diagnostic_updater::DiagnosticTask {
 public:
   AnalogInputTask() : DiagnosticTask("Analog Input") {}
   void run(diagnostic_updater::DiagnosticStatusWrapper &stat);
@@ -168,6 +172,6 @@ private:
   std::vector<uint16_t> values;
 };
 
-} // namespace kobuki
+} // namespace kobuki_node
 
 #endif /* KOBUKI_NODE_DIAGNOSTICS_HPP_ */
