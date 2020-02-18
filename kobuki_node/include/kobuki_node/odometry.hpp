@@ -17,6 +17,7 @@
 ** Includes
 *****************************************************************************/
 
+#include <memory>
 #include <string>
 
 #include <geometry_msgs/msg/quaternion.hpp>
@@ -44,6 +45,11 @@ namespace kobuki_node
 class Odometry final {
 public:
   explicit Odometry(double cmd_vel_timeout, const std::string & odom_frame, const std::string & base_frame, bool publish_tf, bool use_imu_heading, const rclcpp::Time & now);
+  Odometry(Odometry && c) = delete;
+  Odometry & operator=(Odometry && c) = delete;
+  Odometry(const Odometry & c) = delete;
+  Odometry & operator=(const Odometry & c) = delete;
+
   bool commandTimeout(const rclcpp::Time & now) const;
   void update(const ecl::LegacyPose2D<double> &pose_update, ecl::linear_algebra::Vector3d &pose_update_rates,
               double imu_heading, double imu_angular_velocity, const rclcpp::Time & now);

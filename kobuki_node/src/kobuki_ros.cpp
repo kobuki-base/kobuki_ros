@@ -289,16 +289,12 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
   catch (const ecl::StandardException &e) {
     switch (e.flag()) {
       case (ecl::OpenError):
-      {
         RCLCPP_ERROR(get_logger(), "Kobuki : could not open connection [%s].", parameters.device_port);
         break;
-      }
       default:
-      {
         RCLCPP_ERROR(get_logger(), "Kobuki : initialisation failed");
         RCLCPP_DEBUG(get_logger(), e.what());
         break;
-      }
     }
     throw;
   }
@@ -374,9 +370,7 @@ void KobukiRos::subscribeVelocityCommand(const std::shared_ptr<geometry_msgs::ms
     kobuki_.setBaseControl(msg->linear.x, msg->angular.z);
     odometry_->resetTimeout(this->get_clock()->now());
   }
-  return;
 }
-
 
 void KobukiRos::subscribeLed1Command(const std::shared_ptr<kobuki_ros_interfaces::msg::Led> msg)
 {
@@ -428,7 +422,6 @@ void KobukiRos::subscribeDigitalOutputCommand(const std::shared_ptr<kobuki_ros_i
     digital_output.mask[i] = msg->mask[i];
   }
   kobuki_.setDigitalOutput(digital_output);
-  return;
 }
 
 void KobukiRos::subscribeExternalPowerCommand(const std::shared_ptr<kobuki_ros_interfaces::msg::ExternalPower> msg)
@@ -466,7 +459,6 @@ void KobukiRos::subscribeExternalPowerCommand(const std::shared_ptr<kobuki_ros_i
     }
   }
   kobuki_.setExternalPower(digital_output);
-  return;
 }
 
 /**
@@ -655,7 +647,7 @@ void KobukiRos::publishRawInertia()
   rclcpp::Duration interval(0.01); // Time interval between each sensor reading.
   const double digit_to_dps = 0.00875; // digit to deg/s ratio, comes from datasheet of 3d gyro[L3G4200D].
   unsigned int length = data.followed_data_length / 3;
-  for(unsigned int i = 0; i < length; i++) {
+  for (unsigned int i = 0; i < length; i++) {
     // Each sensor reading has id, that circulate 0 to 255.
     msg->header.frame_id = "gyro_link";
 

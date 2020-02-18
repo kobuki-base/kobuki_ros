@@ -46,7 +46,8 @@ Odometry::Odometry(double cmd_vel_timeout, const std::string & odom_frame, const
   pose_.setIdentity();
 }
 
-bool Odometry::commandTimeout(const rclcpp::Time & now) const {
+bool Odometry::commandTimeout(const rclcpp::Time & now) const
+{
   if ((last_cmd_time_.nanoseconds() != 0) && ((now - last_cmd_time_) > cmd_vel_timeout_)) {
     return true;
   }
@@ -56,7 +57,8 @@ bool Odometry::commandTimeout(const rclcpp::Time & now) const {
 }
 
 void Odometry::update(const ecl::LegacyPose2D<double> &pose_update, ecl::linear_algebra::Vector3d &pose_update_rates,
-                      double imu_heading, double imu_angular_velocity, const rclcpp::Time & now) {
+                      double imu_heading, double imu_angular_velocity, const rclcpp::Time & now)
+{
   pose_ *= pose_update;
 
   if (use_imu_heading_) {

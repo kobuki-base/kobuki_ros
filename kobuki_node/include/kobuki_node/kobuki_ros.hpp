@@ -93,8 +93,13 @@ class KobukiRos final : public rclcpp::Node
 public:
   explicit KobukiRos(const rclcpp::NodeOptions & options);
   ~KobukiRos() override;
+  KobukiRos(KobukiRos && c) = delete;
+  KobukiRos & operator=(KobukiRos && c) = delete;
+  KobukiRos(const KobukiRos & c) = delete;
+  KobukiRos & operator=(const KobukiRos & c) = delete;
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
 private:
   void update();
 
@@ -199,7 +204,8 @@ private:
   void rosWarn(const std::string &msg) { RCLCPP_WARN(get_logger(), "Kobuki : %s", msg); }
   void rosError(const std::string &msg) { RCLCPP_ERROR(get_logger(), "Kobuki : %s", msg); }
   void rosFatal(const std::string &msg) { RCLCPP_FATAL(get_logger(), "Kobuki : %s", msg); }
-  void rosNamed(const std::vector<std::string> &msgs) {
+  void rosNamed(const std::vector<std::string> &msgs)
+  {
     if (msgs.size() == 0) {
       return;
     }
