@@ -267,7 +267,7 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
       RCLCPP_INFO(get_logger(), "Kobuki : driver going into loopback (simulation) mode.");
     }
     else {
-      RCLCPP_INFO(get_logger(), "Kobuki : configured for connection on device_port %s", parameters.device_port);
+      RCLCPP_INFO(get_logger(), "Kobuki : configured for connection on device_port %s", parameters.device_port.c_str());
       RCLCPP_INFO(get_logger(), "Kobuki : driver running in normal (non-simulation) mode");
     }
   }
@@ -289,7 +289,7 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
   catch (const ecl::StandardException &e) {
     switch (e.flag()) {
       case (ecl::OpenError):
-        RCLCPP_ERROR(get_logger(), "Kobuki : could not open connection [%s].", parameters.device_port);
+        RCLCPP_ERROR(get_logger(), "Kobuki : could not open connection [%s].", parameters.device_port.c_str());
         break;
       default:
         RCLCPP_ERROR(get_logger(), "Kobuki : initialisation failed");
