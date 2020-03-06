@@ -245,8 +245,8 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
    **********************/
   std::string robot_description, wheel_left_joint_name, wheel_right_joint_name;
 
-  wheel_left_joint_name = this->declare_parameter(wheel_left_joint_name, std::string("wheel_left_joint"));
-  wheel_right_joint_name = this->declare_parameter(wheel_right_joint_name, std::string("wheel_right_joint"));
+  wheel_left_joint_name = this->declare_parameter("wheel_left_joint_name", std::string("wheel_left_joint"));
+  wheel_right_joint_name = this->declare_parameter("wheel_right_joint_name", std::string("wheel_right_joint"));
 
   joint_states_.name.push_back(wheel_left_joint_name);
   joint_states_.name.push_back(wheel_right_joint_name);
@@ -917,6 +917,12 @@ void KobukiRos::publishRobotEvent(const kobuki::RobotEvent &event)
  */
 void KobukiRos::publishRawDataCommand(kobuki::Command::Buffer &buffer)
 {
+  if (raw_data_command_publisher_->get_subscription_count() == 0 &&
+    raw_data_command_publisher_->get_intra_process_subscription_count() == 0)   // no one listening?
+  {
+    return;                                     // avoid publishing
+  }
+
   std::ostringstream ostream;
   kobuki::Command::Buffer::Formatter format;
   ostream << format(buffer); // convert to an easily readable hex string.
@@ -940,6 +946,12 @@ void KobukiRos::publishRawDataCommand(kobuki::Command::Buffer &buffer)
  */
 void KobukiRos::publishRawDataStream(kobuki::PacketFinder::BufferType &buffer)
 {
+  if (raw_data_stream_publisher_->get_subscription_count() == 0 &&
+    raw_data_stream_publisher_->get_intra_process_subscription_count() == 0)   // no one listening?
+  {
+    return;                                     // avoid publishing
+  }
+
   std::ostringstream ostream;
   ostream << "{ " ;
   ostream << std::setfill('0') << std::uppercase;
