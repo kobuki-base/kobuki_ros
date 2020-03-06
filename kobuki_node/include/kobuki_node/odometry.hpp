@@ -44,7 +44,7 @@ namespace kobuki_node
  **/
 class Odometry final {
 public:
-  explicit Odometry(double cmd_vel_timeout, const std::string & odom_frame, const std::string & base_frame, bool publish_tf, bool use_imu_heading, const rclcpp::Time & now);
+  explicit Odometry(double cmd_vel_timeout_sec, const std::string & odom_frame, const std::string & base_frame, bool publish_tf, bool use_imu_heading, const rclcpp::Time & now);
   Odometry(Odometry && c) = delete;
   Odometry & operator=(Odometry && c) = delete;
   Odometry(const Odometry & c) = delete;
@@ -53,9 +53,9 @@ public:
   bool commandTimeout(const rclcpp::Time & now) const;
   void update(const ecl::LegacyPose2D<double> &pose_update, ecl::linear_algebra::Vector3d &pose_update_rates,
               double imu_heading, double imu_angular_velocity, const rclcpp::Time & now);
-  void resetOdometry() { pose_.setIdentity(); }
-  const rclcpp::Duration& timeout() const { return cmd_vel_timeout_; }
-  void resetTimeout(const rclcpp::Time & now) { last_cmd_time_ = now; }
+  void resetOdometry();
+  const rclcpp::Duration& timeout() const;
+  void resetTimeout(const rclcpp::Time & now);
   std::unique_ptr<geometry_msgs::msg::TransformStamped> getTransform();
   std::unique_ptr<nav_msgs::msg::Odometry> getOdometry();
 

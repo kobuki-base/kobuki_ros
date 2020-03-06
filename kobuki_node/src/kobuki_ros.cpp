@@ -215,8 +215,8 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
     throw std::runtime_error("Kobuki : no device port given on the parameter server (e.g. /dev/ttyUSB0).");
   }
 
-  double cmd_vel_timeout = this->declare_parameter("cmd_vel_timeout", 0.6);
-  RCLCPP_INFO(get_logger(), "Kobuki : Velocity commands timeout: %f seconds.", cmd_vel_timeout);
+  double cmd_vel_timeout_sec = this->declare_parameter("cmd_vel_timeout_sec", 0.6);
+  RCLCPP_INFO(get_logger(), "Kobuki : Velocity commands timeout: %f seconds.", cmd_vel_timeout_sec);
 
   std::string odom_frame = this->declare_parameter("odom_frame", std::string("odom"));
   RCLCPP_INFO(get_logger(), "Kobuki : using odom_frame [%s].", odom_frame.c_str());
@@ -272,7 +272,7 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
     }
   }
 
-  odometry_ = std::make_unique<Odometry>(cmd_vel_timeout, odom_frame, base_frame, publish_tf, use_imu_heading, this->get_clock()->now());
+  odometry_ = std::make_unique<Odometry>(cmd_vel_timeout_sec, odom_frame, base_frame, publish_tf, use_imu_heading, this->get_clock()->now());
 
   /*********************
    ** Driver Init
