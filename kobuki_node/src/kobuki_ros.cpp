@@ -176,24 +176,24 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
   /*********************
    ** Slots
    **********************/
-  slot_stream_data_.connect("/stream_data");
-  slot_version_info_.connect("/version_info");
-  slot_controller_info_.connect("/controller_info");
-  slot_button_event_.connect("/button_event");
-  slot_bumper_event_.connect("/bumper_event");
-  slot_cliff_event_.connect("/cliff_event");
-  slot_wheel_event_.connect("/wheel_event");
-  slot_power_event_.connect("/power_event");
-  slot_input_event_.connect("/input_event");
-  slot_robot_event_.connect("/robot_event");
-  slot_debug_.connect("/ros_debug");
-  slot_info_.connect("/ros_info");
-  slot_warn_.connect("/ros_warn");
-  slot_error_.connect("/ros_error");
-  slot_named_.connect("/ros_named");
-  slot_raw_data_command_.connect("/raw_data_command");
-  slot_raw_data_stream_.connect("/raw_data_stream");
-  slot_raw_control_command_.connect("/raw_control_command");
+  slot_stream_data_.connect("/kobuki/stream_data");
+  slot_version_info_.connect("/kobuki/version_info");
+  slot_controller_info_.connect("/kobuki/controller_info");
+  slot_button_event_.connect("/kobuki/button_event");
+  slot_bumper_event_.connect("/kobuki/bumper_event");
+  slot_cliff_event_.connect("/kobuki/cliff_event");
+  slot_wheel_event_.connect("/kobuki/wheel_event");
+  slot_power_event_.connect("/kobuki/power_event");
+  slot_input_event_.connect("/kobuki/input_event");
+  slot_robot_event_.connect("/kobuki/robot_event");
+  slot_debug_.connect("/kobuki/ros_debug");
+  slot_info_.connect("/kobuki/ros_info");
+  slot_warn_.connect("/kobuki/ros_warn");
+  slot_error_.connect("/kobuki/ros_error");
+  slot_named_.connect("/kobuki/ros_named");
+  slot_raw_data_command_.connect("/kobuki/raw_data_command");
+  slot_raw_data_stream_.connect("/kobuki/raw_data_stream");
+  slot_raw_control_command_.connect("/kobuki/raw_control_command");
 
   /*********************
    ** Driver Parameters
@@ -208,7 +208,7 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
 
   parameters.battery_dangerous = this->declare_parameter("battery_dangerous", kobuki::Battery::dangerous);
 
-  parameters.sigslots_namespace = "kobuki";  // configure the first part of the sigslot namespace
+  parameters.sigslots_namespace = "/kobuki";  // configure the first part of the sigslot namespace
 
   parameters.device_port = this->declare_parameter("device_port", "");
   if (parameters.device_port.empty()) {
