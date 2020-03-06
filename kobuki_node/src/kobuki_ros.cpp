@@ -640,7 +640,6 @@ void KobukiRos::publishInertia()
 void KobukiRos::publishRawInertia()
 {
     // Publish as unique pointer to leverage the zero-copy pub/sub feature
-  auto msg = std::make_unique<sensor_msgs::msg::Imu>();
   kobuki::ThreeAxisGyro::Data data = kobuki_.getRawInertiaData();
 
   rclcpp::Time now = this->get_clock()->now();
@@ -648,6 +647,7 @@ void KobukiRos::publishRawInertia()
   const double digit_to_dps = 0.00875; // digit to deg/s ratio, comes from datasheet of 3d gyro[L3G4200D].
   unsigned int length = data.followed_data_length / 3;
   for (unsigned int i = 0; i < length; i++) {
+    auto msg = std::make_unique<sensor_msgs::msg::Imu>();
     // Each sensor reading has id, that circulate 0 to 255.
     msg->header.frame_id = "gyro_link";
 
