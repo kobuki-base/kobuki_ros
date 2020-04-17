@@ -80,18 +80,8 @@ install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}
 )
 
-# install(DIRECTORY launch
-#         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
-# install(DIRECTORY param
-#         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
-# install(DIRECTORY image
-#         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
-# install(PROGRAMS scripts/getOdom2D.py
-#                  scripts/getYaw.py
-#         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(DIRECTORY config launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 ament_package()
