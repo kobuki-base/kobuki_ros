@@ -643,7 +643,7 @@ void KobukiRos::publishRawInertia()
   kobuki::ThreeAxisGyro::Data data = kobuki_.getRawInertiaData();
 
   rclcpp::Time now = this->get_clock()->now();
-  rclcpp::Duration interval(0.01); // Time interval between each sensor reading.
+  rclcpp::Duration interval(RCL_S_TO_NS(0.01)); // Time interval between each sensor reading.
   const double digit_to_dps = 0.00875; // digit to deg/s ratio, comes from datasheet of 3d gyro[L3G4200D].
   unsigned int length = data.followed_data_length / 3;
   for (unsigned int i = 0; i < length; i++) {
