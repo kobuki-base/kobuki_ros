@@ -137,6 +137,12 @@ void WheelDropTask::run(diagnostic_updater::DiagnosticStatusWrapper &stat)
 
 void MotorCurrentTask::run(diagnostic_updater::DiagnosticStatusWrapper &stat)
 {
+  if (values_.empty()) {
+    // It is possible for this to get call before update(), and thus values_
+    // may be empty.  In that case, just return.
+    return;
+  }
+
   if (std::max(values_[0], values_[1]) > 6) { // TODO not sure about this threshold; should be a parameter?
     stat.summary(diagnostic_msgs::msg::DiagnosticStatus::WARN, "Is robot stalled? Motors current is very high");
   }
@@ -175,6 +181,12 @@ void DigitalInputTask::run(diagnostic_updater::DiagnosticStatusWrapper &stat)
 
 void AnalogInputTask::run(diagnostic_updater::DiagnosticStatusWrapper &stat)
 {
+  if (values_.empty()) {
+    // It is possible for this to get call before update(), and thus values_
+    // may be empty.  In that case, just return.
+    return;
+  }
+
   stat.summaryf(diagnostic_msgs::msg::DiagnosticStatus::OK, "[%d, %d, %d, %d]",
                 values_[0], values_[1], values_[2], values_[3]);
 }
