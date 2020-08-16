@@ -44,14 +44,6 @@
   <!-- ECL -->
   <build_depend>ecl_build</build_depend>
 
-  <!-- ROS -->
-  <exec_depend>diagnostic_aggregator</exec_depend>
-
-  <!-- Kobuki -->
-  <exec_depend>kobuki_ftdi</exec_depend>
-  <exec_depend>kobuki_keyop</exec_depend>
-  <exec_depend>kobuki_safety_controller</exec_depend>
-
   <export>
     <build_type>ament_cmake</build_type>
   </export>

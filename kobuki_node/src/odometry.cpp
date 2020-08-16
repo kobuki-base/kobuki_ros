@@ -114,7 +114,7 @@ std::unique_ptr<geometry_msgs::msg::TransformStamped> Odometry::getTransform()
   odom_trans->transform.translation.z = 0.0;
   odom_trans->transform.rotation = odom_quat_;
 
-  return std::move(odom_trans);
+  return odom_trans;
 }
 
 std::unique_ptr<nav_msgs::msg::Odometry> Odometry::getOdometry()
@@ -149,7 +149,7 @@ std::unique_ptr<nav_msgs::msg::Odometry> Odometry::getOdometry()
   odom->pose.covariance[21] = 1e10; // dimensions (z, pitch and roll); this
   odom->pose.covariance[28] = 1e10; // is a requirement of robot_pose_ekf
 
-  return std::move(odom);
+  return odom;
 }
 
 } // namespace kobuki
