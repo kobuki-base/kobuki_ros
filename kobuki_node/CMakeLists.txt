@@ -6,16 +6,10 @@ find_package(angles REQUIRED)
 find_package(diagnostic_msgs REQUIRED)
 find_package(diagnostic_updater REQUIRED)
 find_package(ecl_build REQUIRED)
-# TODO(clalancette): ecl_devices is a recursive dependency of kobuki_driver, but
-# isn't being picked up properly for some reason.  Figure this out.
-find_package(ecl_devices REQUIRED)
 find_package(ecl_errors REQUIRED)
 find_package(ecl_exceptions REQUIRED)
 find_package(ecl_geometry REQUIRED)
 find_package(ecl_linear_algebra REQUIRED)
-# TODO(clalancette): ecl_mobile_robot is a recursive dependency of kobuki_driver,
-# but isn't being picked up properly for some reason.  Figure this out.
-find_package(ecl_mobile_robot REQUIRED)
 find_package(ecl_sigslots REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(kobuki_driver REQUIRED)
@@ -54,12 +48,10 @@ ament_target_dependencies(kobuki_ros
   "tf2_ros"
 )
 target_link_libraries(kobuki_ros
-  ecl_devices::ecl_devices
   ecl_errors::ecl_errors
   ecl_exceptions::ecl_exceptions
   ecl_geometry::ecl_geometry
   ecl_linear_algebra::ecl_linear_algebra
-  ecl_mobile_robot::ecl_mobile_robot
   ecl_sigslots::ecl_sigslots
 )
 
@@ -84,21 +76,12 @@ install(TARGETS kobuki_ros_node
   DESTINATION lib/kobuki_node
 )
 
-# install(DIRECTORY include/${PROJECT_NAME}/
-#         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-# )
-# install(DIRECTORY launch
-#         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
-# install(DIRECTORY param
-#         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
-# install(DIRECTORY image
-#         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
-# install(PROGRAMS scripts/getOdom2D.py
-#                  scripts/getYaw.py
-#         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION include/${PROJECT_NAME}
+)
+
+install(DIRECTORY config launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 ament_package()

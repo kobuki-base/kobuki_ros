@@ -176,24 +176,24 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
   /*********************
    ** Slots
    **********************/
-  slot_stream_data_.connect("/stream_data");
-  slot_version_info_.connect("/version_info");
-  slot_controller_info_.connect("/controller_info");
-  slot_button_event_.connect("/button_event");
-  slot_bumper_event_.connect("/bumper_event");
-  slot_cliff_event_.connect("/cliff_event");
-  slot_wheel_event_.connect("/wheel_event");
-  slot_power_event_.connect("/power_event");
-  slot_input_event_.connect("/input_event");
-  slot_robot_event_.connect("/robot_event");
-  slot_debug_.connect("/ros_debug");
-  slot_info_.connect("/ros_info");
-  slot_warn_.connect("/ros_warn");
-  slot_error_.connect("/ros_error");
-  slot_named_.connect("/ros_named");
-  slot_raw_data_command_.connect("/raw_data_command");
-  slot_raw_data_stream_.connect("/raw_data_stream");
-  slot_raw_control_command_.connect("/raw_control_command");
+  slot_stream_data_.connect("/kobuki/stream_data");
+  slot_version_info_.connect("/kobuki/version_info");
+  slot_controller_info_.connect("/kobuki/controller_info");
+  slot_button_event_.connect("/kobuki/button_event");
+  slot_bumper_event_.connect("/kobuki/bumper_event");
+  slot_cliff_event_.connect("/kobuki/cliff_event");
+  slot_wheel_event_.connect("/kobuki/wheel_event");
+  slot_power_event_.connect("/kobuki/power_event");
+  slot_input_event_.connect("/kobuki/input_event");
+  slot_robot_event_.connect("/kobuki/robot_event");
+  slot_debug_.connect("/kobuki/ros_debug");
+  slot_info_.connect("/kobuki/ros_info");
+  slot_warn_.connect("/kobuki/ros_warn");
+  slot_error_.connect("/kobuki/ros_error");
+  slot_named_.connect("/kobuki/ros_named");
+  slot_raw_data_command_.connect("/kobuki/raw_data_command");
+  slot_raw_data_stream_.connect("/kobuki/raw_data_stream");
+  slot_raw_control_command_.connect("/kobuki/raw_control_command");
 
   /*********************
    ** Driver Parameters
@@ -208,15 +208,15 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
 
   parameters.battery_dangerous = this->declare_parameter("battery_dangerous", kobuki::Battery::dangerous);
 
-  parameters.sigslots_namespace = "kobuki";  // configure the first part of the sigslot namespace
+  parameters.sigslots_namespace = "/kobuki";  // configure the first part of the sigslot namespace
 
   parameters.device_port = this->declare_parameter("device_port", "");
   if (parameters.device_port.empty()) {
     throw std::runtime_error("Kobuki : no device port given on the parameter server (e.g. /dev/ttyUSB0).");
   }
 
-  double cmd_vel_timeout = this->declare_parameter("cmd_vel_timeout", 0.6);
-  RCLCPP_INFO(get_logger(), "Kobuki : Velocity commands timeout: %f seconds.", cmd_vel_timeout);
+  double cmd_vel_timeout_sec = this->declare_parameter("cmd_vel_timeout_sec", 0.6);
+  RCLCPP_INFO(get_logger(), "Kobuki : Velocity commands timeout: %f seconds.", cmd_vel_timeout_sec);
 
   std::string odom_frame = this->declare_parameter("odom_frame", std::string("odom"));
   RCLCPP_INFO(get_logger(), "Kobuki : using odom_frame [%s].", odom_frame.c_str());
@@ -245,8 +245,8 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
    **********************/
   std::string robot_description, wheel_left_joint_name, wheel_right_joint_name;
 
-  wheel_left_joint_name = this->declare_parameter(wheel_left_joint_name, std::string("wheel_left_joint"));
-  wheel_right_joint_name = this->declare_parameter(wheel_right_joint_name, std::string("wheel_right_joint"));
+  wheel_left_joint_name = this->declare_parameter("wheel_left_joint_name", std::string("wheel_left_joint"));
+  wheel_right_joint_name = this->declare_parameter("wheel_right_joint_name", std::string("wheel_right_joint"));
 
   joint_states_.name.push_back(wheel_left_joint_name);
   joint_states_.name.push_back(wheel_right_joint_name);
@@ -267,12 +267,12 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
       RCLCPP_INFO(get_logger(), "Kobuki : driver going into loopback (simulation) mode.");
     }
     else {
-      RCLCPP_INFO(get_logger(), "Kobuki : configured for connection on device_port %s", parameters.device_port);
+      RCLCPP_INFO(get_logger(), "Kobuki : configured for connection on device_port %s", parameters.device_port.c_str());
       RCLCPP_INFO(get_logger(), "Kobuki : driver running in normal (non-simulation) mode");
     }
   }
 
-  odometry_ = std::make_unique<Odometry>(cmd_vel_timeout, odom_frame, base_frame, publish_tf, use_imu_heading, this->get_clock()->now());
+  odometry_ = std::make_unique<Odometry>(cmd_vel_timeout_sec, odom_frame, base_frame, publish_tf, use_imu_heading, this->get_clock()->now());
 
   /*********************
    ** Driver Init
@@ -289,16 +289,12 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
   catch (const ecl::StandardException &e) {
     switch (e.flag()) {
       case (ecl::OpenError):
-      {
-        RCLCPP_ERROR(get_logger(), "Kobuki : could not open connection [%s].", parameters.device_port);
+        RCLCPP_ERROR(get_logger(), "Kobuki : could not open connection [%s].", parameters.device_port.c_str());
         break;
-      }
       default:
-      {
         RCLCPP_ERROR(get_logger(), "Kobuki : initialisation failed");
         RCLCPP_DEBUG(get_logger(), e.what());
         break;
-      }
     }
     throw;
   }
@@ -374,9 +370,7 @@ void KobukiRos::subscribeVelocityCommand(const std::shared_ptr<geometry_msgs::ms
     kobuki_.setBaseControl(msg->linear.x, msg->angular.z);
     odometry_->resetTimeout(this->get_clock()->now());
   }
-  return;
 }
-
 
 void KobukiRos::subscribeLed1Command(const std::shared_ptr<kobuki_ros_interfaces::msg::Led> msg)
 {
@@ -428,7 +422,6 @@ void KobukiRos::subscribeDigitalOutputCommand(const std::shared_ptr<kobuki_ros_i
     digital_output.mask[i] = msg->mask[i];
   }
   kobuki_.setDigitalOutput(digital_output);
-  return;
 }
 
 void KobukiRos::subscribeExternalPowerCommand(const std::shared_ptr<kobuki_ros_interfaces::msg::ExternalPower> msg)
@@ -466,7 +459,6 @@ void KobukiRos::subscribeExternalPowerCommand(const std::shared_ptr<kobuki_ros_i
     }
   }
   kobuki_.setExternalPower(digital_output);
-  return;
 }
 
 /**
@@ -648,14 +640,14 @@ void KobukiRos::publishInertia()
 void KobukiRos::publishRawInertia()
 {
     // Publish as unique pointer to leverage the zero-copy pub/sub feature
-  auto msg = std::make_unique<sensor_msgs::msg::Imu>();
   kobuki::ThreeAxisGyro::Data data = kobuki_.getRawInertiaData();
 
   rclcpp::Time now = this->get_clock()->now();
-  rclcpp::Duration interval(0.01); // Time interval between each sensor reading.
+  rclcpp::Duration interval(RCL_S_TO_NS(0.01)); // Time interval between each sensor reading.
   const double digit_to_dps = 0.00875; // digit to deg/s ratio, comes from datasheet of 3d gyro[L3G4200D].
   unsigned int length = data.followed_data_length / 3;
-  for(unsigned int i = 0; i < length; i++) {
+  for (unsigned int i = 0; i < length; i++) {
+    auto msg = std::make_unique<sensor_msgs::msg::Imu>();
     // Each sensor reading has id, that circulate 0 to 255.
     msg->header.frame_id = "gyro_link";
 
@@ -925,6 +917,12 @@ void KobukiRos::publishRobotEvent(const kobuki::RobotEvent &event)
  */
 void KobukiRos::publishRawDataCommand(kobuki::Command::Buffer &buffer)
 {
+  if (raw_data_command_publisher_->get_subscription_count() == 0 &&
+    raw_data_command_publisher_->get_intra_process_subscription_count() == 0)   // no one listening?
+  {
+    return;                                     // avoid publishing
+  }
+
   std::ostringstream ostream;
   kobuki::Command::Buffer::Formatter format;
   ostream << format(buffer); // convert to an easily readable hex string.
@@ -948,6 +946,12 @@ void KobukiRos::publishRawDataCommand(kobuki::Command::Buffer &buffer)
  */
 void KobukiRos::publishRawDataStream(kobuki::PacketFinder::BufferType &buffer)
 {
+  if (raw_data_stream_publisher_->get_subscription_count() == 0 &&
+    raw_data_stream_publisher_->get_intra_process_subscription_count() == 0)   // no one listening?
+  {
+    return;                                     // avoid publishing
+  }
+
   std::ostringstream ostream;
   ostream << "{ " ;
   ostream << std::setfill('0') << std::uppercase;

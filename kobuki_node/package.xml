@@ -35,12 +35,10 @@
   <depend>kobuki_ros_interfaces</depend>
 
   <!-- ECL -->
-  <depend>ecl_devices</depend>
   <depend>ecl_errors</depend>
   <depend>ecl_exceptions</depend>
   <depend>ecl_geometry</depend>
   <depend>ecl_linear_algebra</depend>
-  <depend>ecl_mobile_robot</depend>
   <depend>ecl_sigslots</depend>
 
   <!-- ECL -->

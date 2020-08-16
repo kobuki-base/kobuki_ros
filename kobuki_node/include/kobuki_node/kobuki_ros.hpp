@@ -93,8 +93,13 @@ class KobukiRos final : public rclcpp::Node
 public:
   explicit KobukiRos(const rclcpp::NodeOptions & options);
   ~KobukiRos() override;
+  KobukiRos(KobukiRos && c) = delete;
+  KobukiRos & operator=(KobukiRos && c) = delete;
+  KobukiRos(const KobukiRos & c) = delete;
+  KobukiRos & operator=(const KobukiRos & c) = delete;
 
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
 private:
   void update();
 
@@ -196,15 +201,16 @@ private:
   // debugging
   void rosDebug(const std::string &msg) { RCLCPP_DEBUG(get_logger(), "Kobuki : %s", msg.c_str()); }
   void rosInfo(const std::string &msg) { RCLCPP_INFO(get_logger(), "Kobuki : %s", msg.c_str()); }
-  void rosWarn(const std::string &msg) { RCLCPP_WARN(get_logger(), "Kobuki : %s", msg); }
-  void rosError(const std::string &msg) { RCLCPP_ERROR(get_logger(), "Kobuki : %s", msg); }
-  void rosFatal(const std::string &msg) { RCLCPP_FATAL(get_logger(), "Kobuki : %s", msg); }
-  void rosNamed(const std::vector<std::string> &msgs) {
+  void rosWarn(const std::string &msg) { RCLCPP_WARN(get_logger(), "Kobuki : %s", msg.c_str()); }
+  void rosError(const std::string &msg) { RCLCPP_ERROR(get_logger(), "Kobuki : %s", msg.c_str()); }
+  void rosFatal(const std::string &msg) { RCLCPP_FATAL(get_logger(), "Kobuki : %s", msg.c_str()); }
+  void rosNamed(const std::vector<std::string> &msgs)
+  {
     if (msgs.size() == 0) {
       return;
     }
     if (msgs.size() == 1) {
-      RCLCPP_INFO(get_logger(), "Kobuki : %s", msgs[0]);
+      rosInfo(msgs[0]);
     }
     if (msgs.size() == 2) {
       if (msgs[0] == "debug") {
@@ -225,19 +231,19 @@ private:
     }
     if (msgs.size() == 3) {
       if (msgs[0] == "debug") {
-        RCLCPP_DEBUG(get_logger(), "%s: Kobuki : %s", msgs[1], msgs[2]);
+        RCLCPP_DEBUG(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
       }
       else if (msgs[0] == "info") {
-        RCLCPP_INFO(get_logger(), "%s: Kobuki : %s", msgs[1], msgs[2]);
+        RCLCPP_INFO(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
       }
       else if (msgs[0] == "warn") {
-        RCLCPP_WARN(get_logger(), "%s: Kobuki : %s", msgs[1], msgs[2]);
+        RCLCPP_WARN(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
       }
       else if (msgs[0] == "error") {
-        RCLCPP_ERROR(get_logger(), "%s: Kobuki : %s", msgs[1], msgs[2]);
+        RCLCPP_ERROR(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
       }
       else if (msgs[0] == "fatal") {
-        RCLCPP_FATAL(get_logger(), "%s: Kobuki : %s", msgs[1], msgs[2]);
+        RCLCPP_FATAL(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
       }
     }
   }

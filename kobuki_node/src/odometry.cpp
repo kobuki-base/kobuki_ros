@@ -14,12 +14,12 @@
 #include <memory>
 #include <string>
 
-#include <geometry_msgs/msg/quaternion.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <nav_msgs/msg/odometry.hpp>
+#include <rclcpp/rclcpp.hpp>
 #include <tf2/LinearMath/Quaternion.h>
 
-#include <ecl/geometry.hpp>
+#include <ecl/geometry/legacy_pose2d.hpp>
 #include <ecl/linear_algebra.hpp>
 
 #include "kobuki_node/odometry.hpp"
@@ -35,8 +35,8 @@ namespace kobuki_node
 ** Implementation
 *****************************************************************************/
 
-Odometry::Odometry(double cmd_vel_timeout, const std::string & odom_frame, const std::string & base_frame, bool publish_tf, bool use_imu_heading, const rclcpp::Time & now) :
-  cmd_vel_timeout_(cmd_vel_timeout),
+Odometry::Odometry(double cmd_vel_timeout_sec, const std::string & odom_frame, const std::string & base_frame, bool publish_tf, bool use_imu_heading, const rclcpp::Time & now) :
+  cmd_vel_timeout_(RCL_S_TO_NS(cmd_vel_timeout_sec)),
   odom_frame_(odom_frame),
   base_frame_(base_frame),
   publish_tf_(publish_tf),
@@ -46,7 +46,18 @@ Odometry::Odometry(double cmd_vel_timeout, const std::string & odom_frame, const
   pose_.setIdentity();
 }
 
-bool Odometry::commandTimeout(const rclcpp::Time & now) const {
+void Odometry::resetOdometry()
+{
+  pose_.setIdentity();
+}
+
+const rclcpp::Duration& Odometry::timeout() const
+{
+  return cmd_vel_timeout_;
+}
+
+bool Odometry::commandTimeout(const rclcpp::Time & now) const
+{
   if ((last_cmd_time_.nanoseconds() != 0) && ((now - last_cmd_time_) > cmd_vel_timeout_)) {
     return true;
   }
@@ -55,8 +66,14 @@ bool Odometry::commandTimeout(const rclcpp::Time & now) const {
   }
 }
 
+void Odometry::resetTimeout(const rclcpp::Time & now)
+{
+  last_cmd_time_ = now;
+}
+
 void Odometry::update(const ecl::LegacyPose2D<double> &pose_update, ecl::linear_algebra::Vector3d &pose_update_rates,
-                      double imu_heading, double imu_angular_velocity, const rclcpp::Time & now) {
+                      double imu_heading, double imu_angular_velocity, const rclcpp::Time & now)
+{
   pose_ *= pose_update;
 
   if (use_imu_heading_) {
