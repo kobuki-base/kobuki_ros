@@ -154,6 +154,7 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
   robot_event_publisher_  = this->create_publisher<kobuki_ros_interfaces::msg::RobotStateEvent>("events/robot_state", rclcpp::QoS(rclcpp::KeepLast(100)).transient_local()); // also latched
   sensor_state_publisher_ = this->create_publisher<kobuki_ros_interfaces::msg::SensorState>("sensors/core", 100);
   dock_ir_publisher_ = this->create_publisher<kobuki_ros_interfaces::msg::DockInfraRed>("sensors/dock_ir", 100);
+  battery_state_publisher_ = this->create_publisher<sensor_msgs::msg::BatteryState>("sensors/battery", 100);
   imu_data_publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("sensors/imu_data", 100);
   raw_imu_data_publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("sensors/imu_data_raw", 100);
   raw_data_command_publisher_ = this->create_publisher<std_msgs::msg::String>("debug/raw_data_command", 100);
@@ -541,6 +542,7 @@ void KobukiRos::processStreamData()
   publishWheelState();
   publishSensorState();
   publishDockIRData();
+  publishBatteryState();
   publishInertia();
   publishRawInertia();
 }
@@ -680,6 +682,32 @@ void KobukiRos::publishDockIRData()
   msg->data.push_back(data.docking[2]);
 
   dock_ir_publisher_->publish(std::move(msg));
+}
+
+void KobukiRos::publishBatteryState()
+{
+  auto msg = std::make_unique<sensor_msgs::msg::BatteryState>();
+  msg->header.frame_id = "base_link";
+  msg->header.stamp = get_clock()->now();
+  auto battery = kobuki_.batteryStatus();
+  msg->voltage = battery.voltage;
+  switch (battery.charging_state) {
+    case kobuki::Battery::Discharging:
+      msg->power_supply_status =
+        sensor_msgs::msg::BatteryState::POWER_SUPPLY_STATUS_DISCHARGING;
+      break;
+    case kobuki::Battery::Charged:
+      msg->power_supply_status =
+        sensor_msgs::msg::BatteryState::POWER_SUPPLY_STATUS_FULL;
+      break;
+    case kobuki::Battery::Charging:
+      msg->power_supply_status =
+        sensor_msgs::msg::BatteryState::POWER_SUPPLY_STATUS_CHARGING;
+      break;
+  }
+  msg->percentage = battery.percent();
+  msg->present = true;
+  battery_state_publisher_->publish(std::move(msg));
 }
 
 /*****************************************************************************
