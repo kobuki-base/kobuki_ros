@@ -6,14 +6,15 @@
   <description>
       ROS node for Kobuki: ROS wrapper for the Kobuki driver.
   </description>
+  <author>Chris Lalancette</author>
   <author>Daniel Stonier</author>
-  <author>Younghun Ju</author>
   <author>Jorge Santos Simon</author>
+  <author>Younghun Ju</author>
   <maintainer email="d.stonier@gmail.com">Daniel Stonier</maintainer>
   <license>BSD</license>
   <url type="bugtracker">https://github.com/kobuki-base/kobuki_ros/issues</url>
   <url type="repository">https://github.com/kobuki-base/kobuki_ros</url>
-  <url type="website">https://index.ros.org/p/kobuki_node/github-kobuki-base-kobuki_ros</url>
+  <url type="website">https://kobuki.readthedocs.io/en/release-1.0.x/</url>
 
   <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
