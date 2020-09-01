@@ -686,6 +686,13 @@ void KobukiRos::publishDockIRData()
 
 void KobukiRos::publishBatteryState()
 {
+  // lazy publisher
+  if (battery_state_publisher_->get_subscription_count() == 0 &&
+      battery_state_publisher_->get_intra_process_subscription_count() == 0)
+  {
+    return;
+  }
+
   auto msg = std::make_unique<sensor_msgs::msg::BatteryState>();
   msg->header.frame_id = "base_link";
   msg->header.stamp = get_clock()->now();
