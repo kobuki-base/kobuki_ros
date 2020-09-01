@@ -51,6 +51,7 @@
 #include <diagnostic_updater/diagnostic_updater.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/battery_state.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <std_msgs/msg/empty.hpp>
@@ -122,6 +123,7 @@ private:
   rclcpp::Publisher<kobuki_ros_interfaces::msg::SensorState>::SharedPtr sensor_state_publisher_;
   rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr joint_state_publisher_;
   rclcpp::Publisher<kobuki_ros_interfaces::msg::DockInfraRed>::SharedPtr dock_ir_publisher_;
+  rclcpp::Publisher<sensor_msgs::msg::BatteryState>::SharedPtr battery_state_publisher_;
   rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr raw_imu_data_publisher_;
   rclcpp::Publisher<kobuki_ros_interfaces::msg::ButtonEvent>::SharedPtr button_event_publisher_;
   rclcpp::Publisher<kobuki_ros_interfaces::msg::DigitalInputEvent>::SharedPtr input_event_publisher_;
@@ -187,6 +189,7 @@ private:
   void publishRawInertia();
   void publishSensorState();
   void publishDockIRData();
+  void publishBatteryState();
   void publishVersionInfo(const kobuki::VersionInfo &version_info);
   void publishControllerInfo();
   void publishButtonEvent(const kobuki::ButtonEvent &event);

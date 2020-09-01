@@ -154,6 +154,7 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
   robot_event_publisher_  = this->create_publisher<kobuki_ros_interfaces::msg::RobotStateEvent>("events/robot_state", rclcpp::QoS(rclcpp::KeepLast(100)).transient_local()); // also latched
   sensor_state_publisher_ = this->create_publisher<kobuki_ros_interfaces::msg::SensorState>("sensors/core", 100);
   dock_ir_publisher_ = this->create_publisher<kobuki_ros_interfaces::msg::DockInfraRed>("sensors/dock_ir", 100);
+  battery_state_publisher_ = this->create_publisher<sensor_msgs::msg::BatteryState>("sensors/battery_state", 100);
   imu_data_publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("sensors/imu_data", 100);
   raw_imu_data_publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("sensors/imu_data_raw", 100);
   raw_data_command_publisher_ = this->create_publisher<std_msgs::msg::String>("debug/raw_data_command", 100);
@@ -541,6 +542,7 @@ void KobukiRos::processStreamData()
   publishWheelState();
   publishSensorState();
   publishDockIRData();
+  publishBatteryState();
   publishInertia();
   publishRawInertia();
 }
@@ -680,6 +682,49 @@ void KobukiRos::publishDockIRData()
   msg->data.push_back(data.docking[2]);
 
   dock_ir_publisher_->publish(std::move(msg));
+}
+
+void KobukiRos::publishBatteryState()
+{
+  // lazy publisher
+  if (battery_state_publisher_->get_subscription_count() == 0 &&
+      battery_state_publisher_->get_intra_process_subscription_count() == 0)
+  {
+    return;
+  }
+
+  auto msg = std::make_unique<sensor_msgs::msg::BatteryState>();
+  auto battery = kobuki_.batteryStatus();
+
+  msg->header.frame_id = "base_link";
+  msg->header.stamp = get_clock()->now();
+  msg->voltage = battery.voltage;
+  msg->temperature = std::numeric_limits<float>::quiet_NaN();
+  msg->current = std::numeric_limits<float>::quiet_NaN();
+  msg->charge = std::numeric_limits<float>::quiet_NaN();
+  msg->capacity = std::numeric_limits<float>::quiet_NaN();
+  msg->design_capacity = std::numeric_limits<float>::quiet_NaN();
+  switch (battery.charging_state) {
+    case kobuki::Battery::Discharging:
+      msg->power_supply_status =
+        sensor_msgs::msg::BatteryState::POWER_SUPPLY_STATUS_DISCHARGING;
+      break;
+    case kobuki::Battery::Charged:
+      msg->power_supply_status =
+        sensor_msgs::msg::BatteryState::POWER_SUPPLY_STATUS_FULL;
+      break;
+    case kobuki::Battery::Charging:
+      msg->power_supply_status =
+        sensor_msgs::msg::BatteryState::POWER_SUPPLY_STATUS_CHARGING;
+      break;
+  }
+  msg->power_supply_health = sensor_msgs::msg::BatteryState::POWER_SUPPLY_HEALTH_UNKNOWN;
+  msg->power_supply_technology = sensor_msgs::msg::BatteryState::POWER_SUPPLY_TECHNOLOGY_LION;
+  msg->location = "";
+  msg->serial_number = "";
+  msg->percentage = battery.percent();
+  msg->present = true;
+  battery_state_publisher_->publish(std::move(msg));
 }
 
 /*****************************************************************************
