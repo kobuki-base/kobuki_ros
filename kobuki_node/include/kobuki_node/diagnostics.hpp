@@ -19,9 +19,9 @@
 
 #include <vector>
 
-#include <kobuki_driver/packets/cliff.hpp>
-#include <kobuki_driver/modules/battery.hpp>
-#include <kobuki_driver/packets/core_sensors.hpp>
+#include <kobuki_core/packets/cliff.hpp>
+#include <kobuki_core/modules/battery.hpp>
+#include <kobuki_core/packets/core_sensors.hpp>
 #include <diagnostic_updater/diagnostic_updater.hpp>
 
 /*****************************************************************************

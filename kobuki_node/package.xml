@@ -32,7 +32,7 @@
   <depend>tf2_ros</depend>
 
   <!-- Kobuki -->
-  <depend>kobuki_driver</depend>
+  <depend>kobuki_core</depend>
   <depend>kobuki_ros_interfaces</depend>
 
   <!-- ECL -->
