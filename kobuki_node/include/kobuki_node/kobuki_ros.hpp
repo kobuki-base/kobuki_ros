@@ -78,7 +78,7 @@
 #include <kobuki_ros_interfaces/msg/version_info.hpp>
 #include <kobuki_ros_interfaces/msg/wheel_drop_event.hpp>
 
-#include <kobuki_driver/kobuki.hpp>
+#include <kobuki_core/kobuki.hpp>
 
 #include "diagnostics.hpp"
 #include "odometry.hpp"

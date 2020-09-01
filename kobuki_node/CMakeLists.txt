@@ -12,7 +12,7 @@ find_package(ecl_geometry REQUIRED)
 find_package(ecl_linear_algebra REQUIRED)
 find_package(ecl_sigslots REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(kobuki_driver REQUIRED)
+find_package(kobuki_core REQUIRED)
 find_package(kobuki_ros_interfaces REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -37,7 +37,7 @@ ament_target_dependencies(kobuki_ros
   "diagnostic_msgs"
   "diagnostic_updater"
   "geometry_msgs"
-  "kobuki_driver"
+  "kobuki_core"
   "kobuki_ros_interfaces"
   "nav_msgs"
   "rclcpp"
