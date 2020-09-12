@@ -587,8 +587,7 @@ void KobukiRos::publishSensorState()
 void KobukiRos::publishWheelState()
 {
   // Take latest encoders and gyro data
-  ecl::LegacyPose2D<double> pose_update;
-  ecl::linear_algebra::Vector3d pose_update_rates;
+  ecl::linear_algebra::Vector3d pose_update, pose_update_rates;
   kobuki_.updateOdometry(pose_update, pose_update_rates);
   kobuki_.getWheelJointStates(joint_states_.position[0], joint_states_.velocity[0],   // left wheel
                               joint_states_.position[1], joint_states_.velocity[1]);  // right wheel

@@ -115,10 +115,10 @@ void AutoDockingROS::syncCb(const nav_msgs::OdometryConstPtr& odom,
     double r, p, y;
     rot.GetRPY(r, p, y);
 
-    ecl::LegacyPose2D<double> pose;
-    pose.x(odom->pose.pose.position.x);
-    pose.y(odom->pose.pose.position.y);
-    pose.heading(y);
+    ecl::linear_algebra::Vector3d pose;  // x, y, heading
+    pose[0] = odom->pose.pose.position.x;
+    pose[1] = odom->pose.pose.position.y;
+    pose[2] = y;
 
     //update
     self->dock_.update(ir->data, core->bumper, core->charger, pose);
