@@ -33,7 +33,7 @@
 
 #include <sstream>
 #include <vector>
-#include <ecl/geometry/legacy_pose2d.hpp>
+#include <ecl/geometry.hpp>
 #include <ecl/linear_algebra.hpp>
 #include <kdl/frames.hpp>
 #include <kdl_conversions/kdl_msg.h>

@@ -25,7 +25,7 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <rclcpp/rclcpp.hpp>
 
-#include <ecl/geometry/legacy_pose2d.hpp>
+#include <ecl/geometry.hpp>
 #include <ecl/linear_algebra.hpp>
 
 /*****************************************************************************
@@ -51,8 +51,13 @@ public:
   Odometry & operator=(const Odometry & c) = delete;
 
   bool commandTimeout(const rclcpp::Time & now) const;
-  void update(const ecl::LegacyPose2D<double> &pose_update, ecl::linear_algebra::Vector3d &pose_update_rates,
-              double imu_heading, double imu_angular_velocity, const rclcpp::Time & now);
+  void update(
+    const ecl::linear_algebra::Vector3d &pose_update,
+    ecl::linear_algebra::Vector3d &pose_update_rates,
+    double imu_heading,
+    double imu_angular_velocity,
+    const rclcpp::Time & now
+  );
   void resetOdometry();
   const rclcpp::Duration& timeout() const;
   void resetTimeout(const rclcpp::Time & now);
@@ -62,8 +67,8 @@ public:
 private:
   geometry_msgs::msg::Quaternion odom_quat_;
   rclcpp::Time odom_quat_time_;
+  ecl::linear_algebra::Vector3d pose_;  // x, y, heading
   ecl::linear_algebra::Vector3d pose_update_rates_;
-  ecl::LegacyPose2D<double> pose_;
   rclcpp::Duration cmd_vel_timeout_;
   std::string odom_frame_;
   std::string base_frame_;

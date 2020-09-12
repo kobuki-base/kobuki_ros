@@ -19,7 +19,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <tf2/LinearMath/Quaternion.h>
 
-#include <ecl/geometry/legacy_pose2d.hpp>
+#include <ecl/geometry.hpp>
 #include <ecl/linear_algebra.hpp>
 
 #include "kobuki_node/odometry.hpp"
@@ -35,20 +35,28 @@ namespace kobuki_node
 ** Implementation
 *****************************************************************************/
 
-Odometry::Odometry(double cmd_vel_timeout_sec, const std::string & odom_frame, const std::string & base_frame, bool publish_tf, bool use_imu_heading, const rclcpp::Time & now) :
+Odometry::Odometry(
+  double cmd_vel_timeout_sec,
+  const std::string & odom_frame,
+  const std::string & base_frame,
+  bool publish_tf,
+  bool use_imu_heading,
+  const rclcpp::Time & now
+):
+  pose_(ecl::linear_algebra::Vector3d::Zero()),  // identity
+  pose_update_rates_(ecl::linear_algebra::Vector3d::Zero()),  // identity
   cmd_vel_timeout_(RCL_S_TO_NS(cmd_vel_timeout_sec)),
   odom_frame_(odom_frame),
   base_frame_(base_frame),
   publish_tf_(publish_tf),
   use_imu_heading_(use_imu_heading),
   last_cmd_time_(now)
-{
-  pose_.setIdentity();
-}
+{}
 
 void Odometry::resetOdometry()
 {
-  pose_.setIdentity();
+  pose_ << 0.0, 0.0, 0.0;
+  pose_update_rates_ << 0.0, 0.0, 0.0;
 }
 
 const rclcpp::Duration& Odometry::timeout() const
@@ -71,20 +79,24 @@ void Odometry::resetTimeout(const rclcpp::Time & now)
   last_cmd_time_ = now;
 }
 
-void Odometry::update(const ecl::LegacyPose2D<double> &pose_update, ecl::linear_algebra::Vector3d &pose_update_rates,
-                      double imu_heading, double imu_angular_velocity, const rclcpp::Time & now)
-{
-  pose_ *= pose_update;
+void Odometry::update(
+  const ecl::linear_algebra::Vector3d &pose_update,
+  ecl::linear_algebra::Vector3d &pose_update_rates,
+  double imu_heading,
+  double imu_angular_velocity,
+  const rclcpp::Time & now
+) {
+  ecl::extend_pose(pose_, pose_update);
 
   if (use_imu_heading_) {
     // Overwite with gyro heading data
-    pose_.heading(imu_heading);
+    pose_[2] = ecl::wrap_angle(imu_heading);
     pose_update_rates[2] = imu_angular_velocity;
   }
 
   // since all ros tf odometry is 6DOF we'll need a quaternion created from yaw
   tf2::Quaternion q;
-  q.setRPY(0.0, 0.0, pose_.heading());
+  q.setRPY(0.0, 0.0, pose_[2]);
   odom_quat_.x = q.x();
   odom_quat_.y = q.y();
   odom_quat_.z = q.z();
@@ -109,8 +121,8 @@ std::unique_ptr<geometry_msgs::msg::TransformStamped> Odometry::getTransform()
   odom_trans->header.frame_id = odom_frame_;
   odom_trans->child_frame_id = base_frame_;
   odom_trans->header.stamp = odom_quat_time_;
-  odom_trans->transform.translation.x = pose_.x();
-  odom_trans->transform.translation.y = pose_.y();
+  odom_trans->transform.translation.x = pose_[0];
+  odom_trans->transform.translation.y = pose_[1];
   odom_trans->transform.translation.z = 0.0;
   odom_trans->transform.rotation = odom_quat_;
 
@@ -128,8 +140,8 @@ std::unique_ptr<nav_msgs::msg::Odometry> Odometry::getOdometry()
   odom->child_frame_id = base_frame_;
 
   // Position
-  odom->pose.pose.position.x = pose_.x();
-  odom->pose.pose.position.y = pose_.y();
+  odom->pose.pose.position.x = pose_[0];
+  odom->pose.pose.position.y = pose_[1];
   odom->pose.pose.position.z = 0.0;
   odom->pose.pose.orientation = odom_quat_;
 
