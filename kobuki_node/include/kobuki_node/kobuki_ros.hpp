@@ -175,7 +175,6 @@ private:
   ecl::Slot<const kobuki::InputEvent&>  slot_input_event_;
   ecl::Slot<const kobuki::RobotEvent&>  slot_robot_event_;
   ecl::Slot<const std::string&> slot_debug_, slot_info_, slot_warn_, slot_error_;
-  ecl::Slot<const std::vector<std::string>&> slot_named_;
   ecl::Slot<kobuki::Command::Buffer&> slot_raw_data_command_;
   ecl::Slot<kobuki::PacketFinder::BufferType&> slot_raw_data_stream_;
   ecl::Slot<const std::vector<short>&> slot_raw_control_command_;
@@ -206,50 +205,6 @@ private:
   void rosInfo(const std::string &msg) { RCLCPP_INFO(get_logger(), "Kobuki : %s", msg.c_str()); }
   void rosWarn(const std::string &msg) { RCLCPP_WARN(get_logger(), "Kobuki : %s", msg.c_str()); }
   void rosError(const std::string &msg) { RCLCPP_ERROR(get_logger(), "Kobuki : %s", msg.c_str()); }
-  void rosFatal(const std::string &msg) { RCLCPP_FATAL(get_logger(), "Kobuki : %s", msg.c_str()); }
-  void rosNamed(const std::vector<std::string> &msgs)
-  {
-    if (msgs.size() == 0) {
-      return;
-    }
-    if (msgs.size() == 1) {
-      rosInfo(msgs[0]);
-    }
-    if (msgs.size() == 2) {
-      if (msgs[0] == "debug") {
-        rosDebug(msgs[1]);
-      }
-      else if (msgs[0] == "info") {
-        rosInfo(msgs[1]);
-      }
-      else if (msgs[0] == "warn") {
-        rosWarn(msgs[1]);
-      }
-      else if (msgs[0] == "error") {
-        rosError(msgs[1]);
-      }
-      else if (msgs[0] == "fatal") {
-        rosFatal(msgs[1]);
-      }
-    }
-    if (msgs.size() == 3) {
-      if (msgs[0] == "debug") {
-        RCLCPP_DEBUG(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
-      }
-      else if (msgs[0] == "info") {
-        RCLCPP_INFO(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
-      }
-      else if (msgs[0] == "warn") {
-        RCLCPP_WARN(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
-      }
-      else if (msgs[0] == "error") {
-        RCLCPP_ERROR(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
-      }
-      else if (msgs[0] == "fatal") {
-        RCLCPP_FATAL(get_logger(), "%s: Kobuki : %s", msgs[1].c_str(), msgs[2].c_str());
-      }
-    }
-  }
 
   void publishRawDataCommand(kobuki::Command::Buffer &buffer);
   void publishRawDataStream(kobuki::PacketFinder::BufferType &buffer);

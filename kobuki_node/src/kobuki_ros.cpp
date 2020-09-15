@@ -114,7 +114,6 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
     slot_info_(&KobukiRos::rosInfo, *this),
     slot_warn_(&KobukiRos::rosWarn, *this),
     slot_error_(&KobukiRos::rosError, *this),
-    slot_named_(&KobukiRos::rosNamed, *this),
     slot_raw_data_command_(&KobukiRos::publishRawDataCommand, *this),
     slot_raw_data_stream_(&KobukiRos::publishRawDataStream, *this),
     slot_raw_control_command_(&KobukiRos::publishRawControlCommand, *this),
@@ -187,11 +186,10 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
   slot_power_event_.connect("/kobuki/power_event");
   slot_input_event_.connect("/kobuki/input_event");
   slot_robot_event_.connect("/kobuki/robot_event");
-  slot_debug_.connect("/kobuki/ros_debug");
-  slot_info_.connect("/kobuki/ros_info");
-  slot_warn_.connect("/kobuki/ros_warn");
-  slot_error_.connect("/kobuki/ros_error");
-  slot_named_.connect("/kobuki/ros_named");
+  slot_debug_.connect("/kobuki/debug");
+  slot_info_.connect("/kobuki/info");
+  slot_warn_.connect("/kobuki/warn");
+  slot_error_.connect("/kobuki/error");
   slot_raw_data_command_.connect("/kobuki/raw_data_command");
   slot_raw_data_stream_.connect("/kobuki/raw_data_stream");
   slot_raw_control_command_.connect("/kobuki/raw_control_command");
