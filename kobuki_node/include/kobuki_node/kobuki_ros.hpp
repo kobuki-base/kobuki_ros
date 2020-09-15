@@ -201,10 +201,10 @@ private:
 
 
   // debugging
-  void rosDebug(const std::string &msg) { RCLCPP_DEBUG(get_logger(), "Kobuki : %s", msg.c_str()); }
-  void rosInfo(const std::string &msg) { RCLCPP_INFO(get_logger(), "Kobuki : %s", msg.c_str()); }
-  void rosWarn(const std::string &msg) { RCLCPP_WARN(get_logger(), "Kobuki : %s", msg.c_str()); }
-  void rosError(const std::string &msg) { RCLCPP_ERROR(get_logger(), "Kobuki : %s", msg.c_str()); }
+  void rosDebug(const std::string &msg) { RCLCPP_DEBUG(get_logger(), "%s", msg.c_str()); }
+  void rosInfo(const std::string &msg) { RCLCPP_INFO(get_logger(), "%s", msg.c_str()); }
+  void rosWarn(const std::string &msg) { RCLCPP_WARN(get_logger(), "%s", msg.c_str()); }
+  void rosError(const std::string &msg) { RCLCPP_ERROR(get_logger(), "%s", msg.c_str()); }
 
   void publishRawDataCommand(kobuki::Command::Buffer &buffer);
   void publishRawDataStream(kobuki::PacketFinder::BufferType &buffer);

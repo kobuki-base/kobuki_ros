@@ -98,7 +98,7 @@ namespace kobuki_node
  *
  * Make sure you call the init() method to fully define this node.
  */
-KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki_ros_node", options),
+KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki", options),
     cmd_vel_timed_out_(false), serial_timed_out_(false),
     slot_version_info_(&KobukiRos::publishVersionInfo, *this),
     slot_stream_data_(&KobukiRos::processStreamData, *this),
@@ -188,7 +188,7 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
   slot_robot_event_.connect("/kobuki/robot_event");
   slot_debug_.connect("/kobuki/debug");
   slot_info_.connect("/kobuki/info");
-  slot_warn_.connect("/kobuki/warn");
+  slot_warn_.connect("/kobuki/warning");
   slot_error_.connect("/kobuki/error");
   slot_raw_data_command_.connect("/kobuki/raw_data_command");
   slot_raw_data_stream_.connect("/kobuki/raw_data_stream");
@@ -199,17 +199,14 @@ KobukiRos::KobukiRos(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki
    **********************/
   kobuki::Parameters parameters;
 
+  parameters.log_level = kobuki::LogLevel::NONE; // disable since we are rewiring to ros slots
   parameters.enable_acceleration_limiter = this->declare_parameter("acceleration_limiter", false);
-
   parameters.battery_capacity = this->declare_parameter("battery_capacity", kobuki::Battery::capacity);
-
   parameters.battery_low = this->declare_parameter("battery_low", kobuki::Battery::low);
-
   parameters.battery_dangerous = this->declare_parameter("battery_dangerous", kobuki::Battery::dangerous);
-
   parameters.sigslots_namespace = "/kobuki";  // configure the first part of the sigslot namespace
-
   parameters.device_port = this->declare_parameter("device_port", "");
+
   if (parameters.device_port.empty()) {
     throw std::runtime_error("Kobuki : no device port given on the parameter server (e.g. /dev/ttyUSB0).");
   }
@@ -319,7 +316,7 @@ KobukiRos::~KobukiRos()
 void KobukiRos::update()
 {
   if (kobuki_.isShutdown()) {
-    RCLCPP_ERROR(get_logger(), "Kobuki : Driver has been shutdown.");
+    RCLCPP_ERROR(get_logger(), "Driver has shutdown.");
     return;
   }
 
@@ -327,7 +324,7 @@ void KobukiRos::update()
     if (!cmd_vel_timed_out_) {
       kobuki_.setBaseControl(0, 0);
       cmd_vel_timed_out_ = true;
-      RCLCPP_WARN(get_logger(), "Kobuki : Incoming velocity commands not received for more than %.2f seconds -> zero'ing velocity commands", odometry_->timeout().seconds());
+      RCLCPP_WARN(get_logger(), "Incoming velocity commands not received for more than %.2f seconds -> zero'ing velocity commands", odometry_->timeout().seconds());
     }
   }
   else {
@@ -337,7 +334,7 @@ void KobukiRos::update()
   bool is_alive = kobuki_.isAlive();
   if (watchdog_diagnostics_.isAlive() && !is_alive) {
     if (!serial_timed_out_) {
-      RCLCPP_ERROR(get_logger(), "Kobuki : Timed out while waiting for serial data stream.");
+      RCLCPP_ERROR(get_logger(), "Timed out while waiting for serial data stream.");
       serial_timed_out_ = true;
     }
     else {
