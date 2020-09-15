@@ -1,6 +1,11 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package kobuki_node
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Kobuki Node
+===========
+
+Forthcoming
+-----------
+* [node] LegacyPose2D -> Vector3d, `#15 <https://github.com/kobuki-base/kobuki_ros/pull/15>`_
+* [node] ros_ prefixes dropped on slots, `#16 <https://github.com/kobuki-base/kobuki_ros/pull/16>`_
+* [node] ported to ros2
 
 0.7.6 (2018-03-14)
 ------------------
