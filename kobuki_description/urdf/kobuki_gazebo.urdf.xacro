@@ -146,6 +146,14 @@
 
 	  <gazebo reference="gyro_link">
 	   <sensor type="imu" name="imu">
+        <plugin name="gazebo_ros_imu_controller" filename="libgazebo_ros_imu_sensor.so">
+          <ros>
+            <argument>~/out:=imu</argument>
+          </ros>
+          <output_type>sensor_msgs/msg/Imu</output_type>
+          <body_name>gyro_link</body_name>
+          <frame_name>gyro_link</frame_name>
+        </plugin>
         <always_on>true</always_on>
         <update_rate>50</update_rate>
         <visualize>false</visualize>
@@ -170,20 +178,22 @@
 	  </gazebo>
 
 	  <gazebo>
-	    <plugin name="kobuki_controller" filename="libgazebo_ros_kobuki.so">
-	      <publish_tf>1</publish_tf>
-	      <left_wheel_joint_name>wheel_left_joint</left_wheel_joint_name>
-	      <right_wheel_joint_name>wheel_right_joint</right_wheel_joint_name>
-	      <wheel_separation>.230</wheel_separation>
-	      <wheel_diameter>0.070</wheel_diameter>
-	      <torque>1.0</torque>
-	      <velocity_command_timeout>0.6</velocity_command_timeout>
-	      <cliff_sensor_left_name>cliff_sensor_left</cliff_sensor_left_name>
-	      <cliff_sensor_center_name>cliff_sensor_front</cliff_sensor_center_name>
-	      <cliff_sensor_right_name>cliff_sensor_right</cliff_sensor_right_name>
-	      <cliff_detection_threshold>0.04</cliff_detection_threshold>
-	      <bumper_name>bumpers</bumper_name>
-        <imu_name>imu</imu_name>
+      <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+        <update_rate>10</update_rate>
+        <left_joint>wheel_left_joint</left_joint>
+        <right_joint>wheel_right_joint</right_joint>
+        <wheel_separation>0.230</wheel_separation>
+        <wheel_diameter>0.070</wheel_diameter>
+        <max_wheel_torque>1.0</max_wheel_torque>
+        <max_wheel_acceleration>1.0</max_wheel_acceleration>
+        <command_topic>cmd_vel</command_topic>
+        <!-- output -->
+        <publish_odom>true</publish_odom>
+        <publish_odom_tf>true</publish_odom_tf>
+        <publish_wheel_tf>true</publish_wheel_tf>
+        <odometry_topic>odom</odometry_topic>
+        <odometry_frame>odom</odometry_frame>
+        <robot_base_frame>base_link</robot_base_frame>
 	    </plugin>
 	  </gazebo>
   </xacro:macro>
