@@ -9,14 +9,14 @@
       package are parsed and used by a variety of other components. Most users will not interact directly
       with this package.
   </description>
-  <author email="d.stonier@gmail.com">Daniel Stonier</author>
-  <author email="marcus.liebhardt@yujinrobot.com">Marcus Liebhardt</author>
-  <author email="yhju@yujinrobot.com">Younghun Ju</author>
   <maintainer email="yhju@yujinrobot.com">Younghun Ju</maintainer>
   <license>BSD</license>
   <url type="bugtracker">https://github.com/kobuki-base/kobuki_ros/issues</url>
   <url type="repository">https://github.com/kobuki-base/kobuki_ros</url>
   <url type="website">http://ros.org/wiki/kobuki_description</url>
+  <author email="d.stonier@gmail.com">Daniel Stonier</author>
+  <author email="marcus.liebhardt@yujinrobot.com">Marcus Liebhardt</author>
+  <author email="yhju@yujinrobot.com">Younghun Ju</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
@@ -25,6 +25,9 @@
 
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
