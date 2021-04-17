@@ -46,12 +46,15 @@
  ** Includes
  *****************************************************************************/
 
-#include <ros/ros.h>
-#include <nodelet/nodelet.h>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include <sensor_msgs/PointCloud2.h>
+#include <rcl_interfaces/msg/set_parameters_result.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 
-#include <kobuki_msgs/SensorState.h>
+#include <kobuki_ros_interfaces/msg/sensor_state.hpp>
 
 /*****************************************************************************
  ** Namespace
@@ -63,17 +66,11 @@ namespace kobuki_bumper2pc
 /**
  * @brief Bumper2PcNodelet class declaration
  */
-class Bumper2PcNodelet : public nodelet::Nodelet
+class Bumper2PcNode final : public rclcpp::Node
 {
 public:
-  Bumper2PcNodelet()
-    : P_INF_X(+100*sin(0.34906585)),
-      P_INF_Y(+100*cos(0.34906585)),
-      N_INF_Y(-100*cos(0.34906585)),
-      ZERO(0), prev_bumper(0), prev_cliff(0) { }
-  ~Bumper2PcNodelet() { }
-
-  void onInit();
+  explicit Bumper2PcNode(const rclcpp::NodeOptions & options);
+  ~Bumper2PcNode() { }
 
 private:
   const float P_INF_X;  // somewhere out of reach from the robot (positive x)
@@ -81,25 +78,34 @@ private:
   const float N_INF_Y;  // somewhere out of reach from the robot (negative y)
   const float ZERO;
 
-  uint8_t prev_bumper;
-  uint8_t prev_cliff;
+  uint8_t prev_bumper_;
+  uint8_t prev_cliff_;
 
   float pc_radius_;
   float pc_height_;
+  float side_point_angle_;
+  std::string base_link_frame_;
+
   float p_side_x_;
   float p_side_y_;
   float n_side_y_;
 
-  ros::Publisher  pointcloud_pub_;
-  ros::Subscriber core_sensor_sub_;
+  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr  pointcloud_pub_;
+  rclcpp::Subscription<kobuki_ros_interfaces::msg::SensorState>::SharedPtr core_sensor_sub_;
 
-  sensor_msgs::PointCloud2 pointcloud_;
+  sensor_msgs::msg::PointCloud2 pointcloud_;
+
+  OnSetParametersCallbackHandle::SharedPtr param_change_handle_;
+
+  rcl_interfaces::msg::SetParametersResult paramChangeCallback(const std::vector<rclcpp::Parameter> & parameters);
+
+  void reconfigurePointCloud(float radius, float height, float angle, const std::string & base_link_frame);
 
   /**
    * @brief Core sensors state structure callback
    * @param msg incoming topic message
    */
-  void coreSensorCB(const kobuki_msgs::SensorState::ConstPtr& msg);
+  void coreSensorCB(const std::shared_ptr<kobuki_ros_interfaces::msg::SensorState> msg);
 };
 
 } // namespace kobuki_bumper2pc

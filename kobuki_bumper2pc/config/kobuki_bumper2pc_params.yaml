@@ -1,0 +1,6 @@
+kobuki_bumper2pc:
+  ros__parameters:
+    pointcloud_radius: 0.25
+    pointcloud_height: 0.04
+    side_point_angle: 0.34906585
+    base_link_frame: base_link
