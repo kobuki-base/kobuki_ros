@@ -1,43 +1,60 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
+
 project(kobuki_random_walker)
-find_package(catkin REQUIRED COMPONENTS ecl_threads
-                                        geometry_msgs
-                                        kobuki_msgs
-                                        nodelet
-                                        pluginlib
-                                        roscpp
-                                        std_msgs
-                                        yocs_controllers)
 
-catkin_package(INCLUDE_DIRS include
-               LIBRARIES kobuki_random_walker_nodelet
-               CATKIN_DEPENDS ecl_threads
-                              geometry_msgs
-                              kobuki_msgs
-                              nodelet
-                              pluginlib
-                              roscpp
-                              std_msgs
-                              yocs_controllers)
+find_package(ament_cmake_ros REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(kobuki_ros_interfaces REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(std_msgs REQUIRED)
 
-include_directories(include
-                    ${catkin_INCLUDE_DIRS})
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
-add_library(kobuki_random_walker_nodelet src/nodelet.cpp)
-add_dependencies(kobuki_random_walker_nodelet ${catkin_EXPORTED_TARGETS})
-target_link_libraries(kobuki_random_walker_nodelet ${catkin_LIBRARIES})
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
-install(TARGETS kobuki_random_walker_nodelet
-        DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
-        
+add_library(kobuki_random_walker src/random_walker.cpp)
+target_include_directories(kobuki_random_walker PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include>"
+)
+ament_target_dependencies(kobuki_random_walker
+  "geometry_msgs"
+  "kobuki_ros_interfaces"
+  "rclcpp"
+  "std_msgs"
+)
+
+add_executable(kobuki_random_walker_node src/random_walker_node.cpp)
+ament_target_dependencies(kobuki_random_walker_node
+  "rclcpp"
+)
+target_link_libraries(kobuki_random_walker_node
+  kobuki_random_walker
+)
+
+rclcpp_components_register_nodes(kobuki_random_walker
+  "kobuki_random_walker::RandomWalkerNode")
+
+install(TARGETS kobuki_random_walker
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
 install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
-
-install(DIRECTORY param
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-
-install(DIRECTORY plugins
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-
+  DESTINATION include/${PROJECT_NAME}
+)
+install(TARGETS kobuki_random_walker_node
+  DESTINATION lib/${PROJECT_NAME}
+)
 install(DIRECTORY launch
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+  DESTINATION share/${PROJECT_NAME}
+)
+
+ament_package()
