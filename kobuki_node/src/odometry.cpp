@@ -45,7 +45,7 @@ Odometry::Odometry(
 ):
   pose_(ecl::linear_algebra::Vector3d::Zero()),  // identity
   pose_update_rates_(ecl::linear_algebra::Vector3d::Zero()),  // identity
-  cmd_vel_timeout_(RCL_S_TO_NS(cmd_vel_timeout_sec)),
+  cmd_vel_timeout_(rclcpp::Duration::from_seconds(cmd_vel_timeout_sec)),
   odom_frame_(odom_frame),
   base_frame_(base_frame),
   publish_tf_(publish_tf),
