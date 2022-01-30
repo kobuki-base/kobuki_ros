@@ -5,7 +5,6 @@ find_package(ament_cmake_ros REQUIRED)
 find_package(ecl_build REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(kobuki_ros_interfaces REQUIRED)
-find_package(rcl_interfaces REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
@@ -18,7 +17,6 @@ include_directories(include)
 add_library(kobuki_safety_controller SHARED src/safety_controller.cpp)
 ament_target_dependencies(kobuki_safety_controller
   "geometry_msgs"
-  "rcl_interfaces"
   "kobuki_ros_interfaces"
   "rclcpp"
   "rclcpp_components"

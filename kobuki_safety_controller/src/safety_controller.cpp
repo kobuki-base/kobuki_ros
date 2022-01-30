@@ -43,10 +43,8 @@
 #include <chrono>
 #include <functional>
 #include <memory>
-#include <vector>
 
 #include <geometry_msgs/msg/twist.hpp>
-#include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <std_msgs/msg/empty.hpp>
@@ -72,12 +70,10 @@ SafetyController::SafetyController(const rclcpp::NodeOptions & options) :
   cliff_left_detected_(false),
   cliff_center_detected_(false),
   cliff_right_detected_(false),
-  time_to_extend_bump_cliff_events_(rclcpp::Duration(0.0)),
   last_event_time_(this->get_clock()->now())
 {
-  //how long to keep sending messages after a bump, cliff, or wheel drop stops
-  double time_to_extend_bump_cliff_events = this->declare_parameter("time_to_extend_bump_cliff_events", 0.0);
-  time_to_extend_bump_cliff_events_ = rclcpp::Duration(time_to_extend_bump_cliff_events);
+  // how long to keep sending messages after a bump, cliff, or wheel drop stops
+  this->declare_parameter("time_to_extend_bump_cliff_events", 0.0);
 
   enable_controller_subscriber_ = this->create_subscription<std_msgs::msg::Empty>("enable", rclcpp::QoS(10), std::bind(&SafetyController::enableCB, this, std::placeholders::_1));
   disable_controller_subscriber_ = this->create_subscription<std_msgs::msg::Empty>("disable", rclcpp::QoS(10), std::bind(&SafetyController::disableCB, this, std::placeholders::_1));
@@ -90,10 +86,6 @@ SafetyController::SafetyController(const rclcpp::NodeOptions & options) :
   msg_ = std::make_unique<geometry_msgs::msg::Twist>();
 
   timer_ = this->create_wall_timer(std::chrono::milliseconds(100), std::bind(&SafetyController::spin, this));
-
-  param_cb_ =
-    add_on_set_parameters_callback(std::bind(&SafetyController::parameterUpdate, this,
-      std::placeholders::_1));
 }
 
 SafetyController:: ~SafetyController()
@@ -305,44 +297,16 @@ void SafetyController::spin()
     }
     else
     {
+      double time_to_extend_bump_cliff_events = this->get_parameter("time_to_extend_bump_cliff_events").get_value<double>();
+      rclcpp::Duration extend_bump_cliff_events_duration = rclcpp::Duration(time_to_extend_bump_cliff_events);
       // if we want to extend the safety state and we're within the time, just keep sending msg_
-      if (time_to_extend_bump_cliff_events_ > rclcpp::Duration(1e-10) &&
-          this->get_clock()->now() - last_event_time_ < time_to_extend_bump_cliff_events_)
+      if (extend_bump_cliff_events_duration > rclcpp::Duration(1e-10) &&
+          this->get_clock()->now() - last_event_time_ < extend_bump_cliff_events_duration)
       {
         velocity_command_publisher_->publish(*msg_);
       }
     }
   }
-}
-
-rcl_interfaces::msg::SetParametersResult SafetyController::parameterUpdate(
-  const std::vector<rclcpp::Parameter> & parameters)
-{
-  rcl_interfaces::msg::SetParametersResult result;
-  result.successful = true;
-
-  for (const rclcpp::Parameter & parameter : parameters)
-  {
-    if (parameter.get_name() == "time_to_extend_bump_cliff_events")
-    {
-      if (parameter.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE)
-      {
-        result.successful = false;
-        result.reason = "time_to_extend_bump_cliff_events must be a double";
-        break;
-      }
-      double time_to_extend_bump_cliff_events = parameter.get_value<double>();
-      time_to_extend_bump_cliff_events_ = rclcpp::Duration(time_to_extend_bump_cliff_events);
-    }
-    else
-    {
-      result.successful = false;
-      result.reason = "unknown parameter";
-      break;
-    }
-  }
-
-  return result;
 }
 
 } // namespace kobuki_safety_controller
