@@ -5,7 +5,6 @@ find_package(ament_cmake_ros REQUIRED)
 find_package(ecl_build REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(kobuki_ros_interfaces REQUIRED)
-find_package(rcl_interfaces REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 
@@ -18,7 +17,6 @@ add_library(kobuki_keyop SHARED src/keyop.cpp)
 ament_target_dependencies(kobuki_keyop
   "geometry_msgs"
   "kobuki_ros_interfaces"
-  "rcl_interfaces"
   "rclcpp"
   "rclcpp_components"
 )
