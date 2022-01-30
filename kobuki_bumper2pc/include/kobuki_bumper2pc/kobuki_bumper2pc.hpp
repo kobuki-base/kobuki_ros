@@ -48,9 +48,8 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 
-#include <rcl_interfaces/msg/set_parameters_result.hpp>
+#include <rcl_interfaces/msg/parameter_event.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 
@@ -95,9 +94,11 @@ private:
 
   sensor_msgs::msg::PointCloud2 pointcloud_;
 
-  OnSetParametersCallbackHandle::SharedPtr param_change_handle_;
+  std::shared_ptr<rclcpp::Subscription<rcl_interfaces::msg::ParameterEvent,
+    std::allocator<void>>> parameter_subscription_;
 
-  rcl_interfaces::msg::SetParametersResult paramChangeCallback(const std::vector<rclcpp::Parameter> & parameters);
+  void onParameterEvent(
+    std::shared_ptr<rcl_interfaces::msg::ParameterEvent> event);
 
   void reconfigurePointCloud(float radius, float height, float angle, const std::string & base_link_frame);
 
