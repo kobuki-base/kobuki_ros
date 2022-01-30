@@ -27,7 +27,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <cstdio>
 #include <memory>
 
 #include <rclcpp/rclcpp.hpp>
@@ -36,9 +35,6 @@
 
 int main(int argc, char** argv)
 {
-  // Configures stdout stream for no buffering
-  setvbuf(stdout, nullptr, _IONBF, BUFSIZ);
-
   rclcpp::init(argc, argv);
 
   rclcpp::spin(std::make_shared<kobuki_keyop::KeyOp>(rclcpp::NodeOptions()));
