@@ -56,63 +56,55 @@ typedef message_filters::sync_policies::ApproximateTime<
 
 class AutoDockingROS final : public rclcpp::Node
 {
-  public:
-    AutoDockingROS(const rclcpp::NodeOptions & options);
-    ~AutoDockingROS();
+public:
+  AutoDockingROS(const rclcpp::NodeOptions & options);
+  ~AutoDockingROS();
 
-  private:
-    using AutoDocking = kobuki_ros_interfaces::action::AutoDocking;
-    using GoalHandleAutoDocking = rclcpp_action::ServerGoalHandle<AutoDocking>;
+private:
+  using AutoDocking = kobuki_ros_interfaces::action::AutoDocking;
+  using GoalHandleAutoDocking = rclcpp_action::ServerGoalHandle<AutoDocking>;
 
-    AutoDockingROS* self;
-    kobuki::DockDrive dock_;
+  kobuki::DockDrive dock_;
 
-    rclcpp_action::Server<kobuki_ros_interfaces::action::AutoDocking>::SharedPtr as_;
+  rclcpp_action::Server<kobuki_ros_interfaces::action::AutoDocking>::SharedPtr as_;
 
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr velocity_commander_;
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr debug_jabber_;
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr debug_;
+  rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr velocity_commander_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr debug_jabber_;
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr debug_;
 
-    std::shared_ptr<message_filters::Subscriber<nav_msgs::msg::Odometry>> odom_sub_;
-    std::shared_ptr<message_filters::Subscriber<kobuki_ros_interfaces::msg::DockInfraRed>> ir_sub_;
-    std::shared_ptr<message_filters::Subscriber<kobuki_ros_interfaces::msg::SensorState>> core_sub_;
+  std::shared_ptr<message_filters::Subscriber<nav_msgs::msg::Odometry>> odom_sub_;
+  std::shared_ptr<message_filters::Subscriber<kobuki_ros_interfaces::msg::DockInfraRed>> ir_sub_;
+  std::shared_ptr<message_filters::Subscriber<kobuki_ros_interfaces::msg::SensorState>> core_sub_;
 
-    std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> sync_;
+  std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> sync_;
 
-    OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
+  OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
 
-    void syncCb(
-      const std::shared_ptr<nav_msgs::msg::Odometry> odom,
-      const std::shared_ptr<kobuki_ros_interfaces::msg::SensorState> core,
-      const std::shared_ptr<kobuki_ros_interfaces::msg::DockInfraRed> ir
-    );
+  void syncCb(
+    const std::shared_ptr<nav_msgs::msg::Odometry> odom,
+    const std::shared_ptr<kobuki_ros_interfaces::msg::SensorState> core,
+    const std::shared_ptr<kobuki_ros_interfaces::msg::DockInfraRed> ir);
 
-    void debugCb(
-      const std::shared_ptr<std_msgs::msg::String> msg
-    );
+  void debugCb(const std::shared_ptr<std_msgs::msg::String> msg);
 
-    rclcpp_action::GoalResponse handle_goal(
-      const rclcpp_action::GoalUUID & uuid,
-      std::shared_ptr<const AutoDocking::Goal> goal
-    );
+  rclcpp_action::GoalResponse handle_goal(
+    const rclcpp_action::GoalUUID & uuid,
+    std::shared_ptr<const AutoDocking::Goal> goal);
 
-    rclcpp_action::CancelResponse handle_cancel(
-      const std::shared_ptr<GoalHandleAutoDocking> goal_handle
-    );
+  rclcpp_action::CancelResponse handle_cancel(
+    const std::shared_ptr<GoalHandleAutoDocking> goal_handle);
 
-    void handle_accepted(
-      const std::shared_ptr<GoalHandleAutoDocking> goal_handle
-    );
+  void handle_accepted(
+    const std::shared_ptr<GoalHandleAutoDocking> goal_handle);
 
-    void execute(
-      const std::shared_ptr<GoalHandleAutoDocking> goal_handle
-    );
+  void execute(
+    const std::shared_ptr<GoalHandleAutoDocking> goal_handle);
 
-    rcl_interfaces::msg::SetParametersResult parametersCallback(
-      const std::vector<rclcpp::Parameter> &parameters
-    );
-
+  rcl_interfaces::msg::SetParametersResult parametersCallback(
+    const std::vector<rclcpp::Parameter> &parameters
+  );
 };
 
-} //namespace kobuki
+}  // namespace kobuki_auto_docking
+
 #endif /* AUTO_DOCKING_ROS_HPP_ */

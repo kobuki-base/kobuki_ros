@@ -14,169 +14,159 @@
 
 namespace kobuki_auto_docking
 {
-  AutoDockingROS::AutoDockingROS(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki_auto_docking", options){   
-    self = this;
+AutoDockingROS::AutoDockingROS(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki_auto_docking", options){
+  using namespace std::placeholders;
 
-    using namespace std::placeholders;
+  this->as_ = rclcpp_action::create_server<AutoDocking>(
+    this,
+    "auto_docking_action",
+    std::bind(&AutoDockingROS::handle_goal, this, _1, _2),
+    std::bind(&AutoDockingROS::handle_cancel, this, _1),
+    std::bind(&AutoDockingROS::handle_accepted, this, _1));
 
-    this->as_ = rclcpp_action::create_server<AutoDocking>(
-      this,
-      "auto_docking_action",
-      std::bind(&AutoDockingROS::handle_goal, this, _1, _2),
-      std::bind(&AutoDockingROS::handle_cancel, this, _1),
-      std::bind(&AutoDockingROS::handle_accepted, this, _1)
-    );
+  // Configure docking drive
+  double min_abs_v = this->declare_parameter<double>("min_abs_v", 0.01);
+  double min_abs_w = this->declare_parameter<double>("min_abs_w", 0.1);
 
-    this->declare_parameter<double>("min_abs_v", 0.01);
-    this->declare_parameter<double>("min_abs_w", 0.1);
+  dock_.setMinAbsV(min_abs_v);
+  dock_.setMinAbsW(min_abs_w);
 
-    // Configure docking drive
-    double min_abs_v, min_abs_w;
-    if (this->get_parameter("min_abs_v", min_abs_v) == true)
-      dock_.setMinAbsV(min_abs_v);
+  // parameter callback
+  param_callback_handle_ = this->add_on_set_parameters_callback(
+    std::bind(&AutoDockingROS::parametersCallback, this, std::placeholders::_1));
 
-    if (this->get_parameter("min_abs_w", min_abs_w) == true)
-      dock_.setMinAbsW(min_abs_w);
+  // Publishers and subscribers
+  velocity_commander_ = this->create_publisher<geometry_msgs::msg::Twist>("commands/velocity", 10);
+  debug_jabber_ = this->create_publisher<std_msgs::msg::String>("debug/feedback", 10);
 
-    // parater callback
-    param_callback_handle_ = this->add_on_set_parameters_callback(
-      std::bind(&AutoDockingROS::parametersCallback, this, std::placeholders::_1)
-    );
+  debug_ = this->create_subscription<std_msgs::msg::String>(
+    "debug/mode_shift", 10, std::bind(&AutoDockingROS::debugCb, this, _1));
 
-    // Publishers and subscribers
-    velocity_commander_ = this->create_publisher<geometry_msgs::msg::Twist>("commands/velocity", 10);
-    debug_jabber_ = this->create_publisher<std_msgs::msg::String>("debug/feedback", 10);
+  odom_sub_.reset(new message_filters::Subscriber<nav_msgs::msg::Odometry>(this, "odom"));
+  core_sub_.reset(new message_filters::Subscriber<kobuki_ros_interfaces::msg::SensorState>(this, "sensors/core"));
+  ir_sub_.reset(new message_filters::Subscriber<kobuki_ros_interfaces::msg::DockInfraRed>(this, "sensors/dock_ir"));
 
-    debug_ = this->create_subscription<std_msgs::msg::String>(
-      "debug/mode_shift", 10, std::bind(&AutoDockingROS::debugCb, this, _1)
-    );
+  sync_.reset(new message_filters::Synchronizer<SyncPolicy>(SyncPolicy(10), *odom_sub_, *core_sub_, *ir_sub_));
+  sync_->registerCallback(&AutoDockingROS::syncCb, this);
 
-    odom_sub_.reset(new message_filters::Subscriber<nav_msgs::msg::Odometry>(this, "odom"));
-    core_sub_.reset(new message_filters::Subscriber<kobuki_ros_interfaces::msg::SensorState>(this, "sensors/core"));
-    ir_sub_.reset(new message_filters::Subscriber<kobuki_ros_interfaces::msg::DockInfraRed>(this, "sensors/dock_ir"));
+  dock_.init();
+}
 
-    sync_.reset(new message_filters::Synchronizer<SyncPolicy>(SyncPolicy(10), *odom_sub_, *core_sub_, *ir_sub_));
-    sync_->registerCallback(&AutoDockingROS::syncCb, this);
-
-    dock_.init();
-
+AutoDockingROS::~AutoDockingROS()
+{
+  if (dock_.isEnabled()) {
+    dock_.disable();
   }
-  
-  AutoDockingROS::~AutoDockingROS(){
-    if(dock_.isEnabled())
-      dock_.disable();
+}
+
+rclcpp_action::GoalResponse AutoDockingROS::handle_goal(
+  const rclcpp_action::GoalUUID & uuid,
+  std::shared_ptr<const AutoDocking::Goal> goal)
+{
+  RCLCPP_INFO(this->get_logger(), "Received goal request");
+  (void)uuid; //because -Werror=unused-parameter
+  (void)goal; //because -Werror=unused-parameter
+
+  if (dock_.isEnabled()) {
+    auto result_ = std::make_shared<AutoDocking::Result>();
+    result_->text = "Rejected: dock_drive is already enabled.";
+    RCLCPP_INFO(this->get_logger(), "New goal received but rejected");
+
+    return rclcpp_action::GoalResponse::REJECT;
   }
 
-  rclcpp_action::GoalResponse AutoDockingROS::handle_goal(
-    const rclcpp_action::GoalUUID & uuid,
-    std::shared_ptr<const AutoDocking::Goal> goal
-  ){
-      RCLCPP_INFO(this->get_logger(), "Received goal request");
-      (void)uuid; //because -Werror=unused-parameter
-      (void)goal; //because -Werror=unused-parameter
+  return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+}
 
-      if(dock_.isEnabled()){
-        auto result_ = std::make_shared<AutoDocking::Result>();
-        result_->text = "Rejected: dock_drive is already enabled.";
-        RCLCPP_INFO(this->get_logger(), "New goal received but rejected");
+rclcpp_action::CancelResponse AutoDockingROS::handle_cancel(
+  const std::shared_ptr<GoalHandleAutoDocking> goal_handle)
+{
+  // (Bug) The program crashed after terminating (Ctrl+C) the activate.sh
+  // info: terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
+  RCLCPP_INFO(this->get_logger(), "Received request to cancel goal");
+  (void)goal_handle; //because -Werror=unused-parameter
 
-        return rclcpp_action::GoalResponse::REJECT;
-      }
+  if (dock_.isEnabled()) {
+    dock_.disable();
+  }
 
-      return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
-    }
+  auto result_ = std::make_shared<AutoDocking::Result>();
+  result_->text = "Cancelled: Cancel requested.";
+  goal_handle->canceled(result_);
+  RCLCPP_INFO(this->get_logger(), "Result: %s", result_->text);
 
-  rclcpp_action::CancelResponse AutoDockingROS::handle_cancel(
-    const std::shared_ptr<GoalHandleAutoDocking> goal_handle
-  ){
-      // (Bug) The program crashed after terminating (Ctrl+C) the activate.sh
-      // info: terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
-      RCLCPP_INFO(this->get_logger(), "Received request to cancel goal");
-      (void)goal_handle; //because -Werror=unused-parameter
+  return rclcpp_action::CancelResponse::ACCEPT;
+}
 
-      if(dock_.isEnabled())
-        dock_.disable();
+void AutoDockingROS::handle_accepted(
+  const std::shared_ptr<GoalHandleAutoDocking> goal_handle)
+{
+  using namespace std::placeholders;
+  std::thread{std::bind(&AutoDockingROS::execute, this, _1), goal_handle}.detach();
+}
 
-      auto result_ = std::make_shared<AutoDocking::Result>();
+void AutoDockingROS::execute(
+  const std::shared_ptr<GoalHandleAutoDocking> goal_handle)
+{
+  RCLCPP_INFO(this->get_logger(), "New goal received and accepted");
+
+  rclcpp::Rate loop_rate(1);
+
+  auto feedback_ = std::make_shared<AutoDocking::Feedback>();
+  auto result_ = std::make_shared<AutoDocking::Result>();
+
+  dock_.enable();
+
+  while ((dock_.getState() != kobuki::RobotDockingState::DONE) && rclcpp::ok()) {
+    if (goal_handle->is_canceling()) {
+      RCLCPP_INFO(this->get_logger(), "goal_handle->is_canceling()");
       result_->text = "Cancelled: Cancel requested.";
       goal_handle->canceled(result_);
-      RCLCPP_INFO(this->get_logger(), "Result: %s", result_->text);
-
-      return rclcpp_action::CancelResponse::ACCEPT;
+      RCLCPP_INFO(this->get_logger(), "[kobuki_auto_docking] %s", result_->text);
+      dock_.disable();
+      return;
+    } else if (!dock_.isEnabled()) {  // Action Server is activated, but DockDrive is not enabled, or disabled unexpectedly
+      RCLCPP_ERROR(this->get_logger(), "Unintended Case: ActionService is active, but DockDrive is not enabled..");
+      result_->text = "Aborted: dock_drive is disabled unexpectedly";
+      goal_handle->abort(result_);
+      RCLCPP_DEBUG(this->get_logger(), "Goal aborted.");
+      dock_.disable();
+      return;
+    } else {
+      feedback_->state = dock_.getStateStr();
+      feedback_->text = dock_.getDebugStr();
+      goal_handle->publish_feedback(feedback_);
+      RCLCPP_DEBUG(this->get_logger(), "Feedback sent");
     }
 
-  void AutoDockingROS::handle_accepted(
-    const std::shared_ptr<GoalHandleAutoDocking> goal_handle
-  ){
-    using namespace std::placeholders;
-    std::thread{std::bind(&AutoDockingROS::execute, this, _1), goal_handle}.detach();
+    loop_rate.sleep();
   }
 
-  void AutoDockingROS::execute(
-    const std::shared_ptr<GoalHandleAutoDocking> goal_handle
-  ){
-    RCLCPP_INFO(this->get_logger(), "New goal received and accepted");
-
-    rclcpp::Rate loop_rate(1);
-
-    //const auto goal_ = goal_handle->get_goal();
-    auto feedback_ = std::make_shared<AutoDocking::Feedback>();
-    auto result_ = std::make_shared<AutoDocking::Result>();
-
-    dock_.enable();
-
-    while((dock_.getState() != kobuki::RobotDockingState::DONE) && rclcpp::ok()){
-      if(goal_handle->is_canceling()){
-        RCLCPP_INFO(this->get_logger(), "goal_handle->is_canceling()");
-        result_->text = "Cancelled: Cancel requested.";
-        goal_handle->canceled(result_);
-        RCLCPP_INFO(this->get_logger(), "[kobuki_auto_docking] %s", result_->text);
-        dock_.disable();
-        return;
-      } else if (!dock_.isEnabled()){ //Action Server is activated, but DockDrive is not enabled, or disabled unexpectedly
-          RCLCPP_ERROR(this->get_logger(), "Unintended Case: ActionService is active, but DockDrive is not enabled..");
-          result_->text = "Aborted: dock_drive is disabled unexpectedly";
-          goal_handle->abort(result_);
-          RCLCPP_DEBUG(this->get_logger(), "Goal aborted.");
-          dock_.disable();
-          return;
-      } else {
-        feedback_->state = dock_.getStateStr();
-        feedback_->text = dock_.getDebugStr();
-        goal_handle->publish_feedback(feedback_);
-        RCLCPP_DEBUG(this->get_logger(), "Feedback sent");
-      }
-
-      loop_rate.sleep();
-    }
-
-    if(rclcpp::ok()){
-        result_->text = "Arrived on docking station successfully";
-        goal_handle->succeed(result_);
-        RCLCPP_INFO(this->get_logger(), "Arrived on docking station successfully");
-        RCLCPP_DEBUG(this->get_logger(), "Result sent");
-        dock_.disable();
-    }
-
-  } //AutoDockingROS::execute
+  if (rclcpp::ok()) {
+    result_->text = "Arrived on docking station successfully";
+    goal_handle->succeed(result_);
+    RCLCPP_INFO(this->get_logger(), "Arrived on docking station successfully");
+    RCLCPP_DEBUG(this->get_logger(), "Result sent");
+    dock_.disable();
+  }
+}
 
 void AutoDockingROS::syncCb(
   const std::shared_ptr<nav_msgs::msg::Odometry> odom,
   const std::shared_ptr<kobuki_ros_interfaces::msg::SensorState> core,
-  const std::shared_ptr<kobuki_ros_interfaces::msg::DockInfraRed> ir
-){
-  //process and run
-  if(self->dock_.isEnabled()){
-   
-    //conversions
+  const std::shared_ptr<kobuki_ros_interfaces::msg::DockInfraRed> ir)
+{
+  // process and run
+  if (this->dock_.isEnabled()) {
+
+    // conversions
     double roll, pitch, yaw;
 
     tf2::Quaternion q(
-        odom->pose.pose.orientation.x,
-        odom->pose.pose.orientation.y,
-        odom->pose.pose.orientation.z,
-        odom->pose.pose.orientation.w
-    );
+      odom->pose.pose.orientation.x,
+      odom->pose.pose.orientation.y,
+      odom->pose.pose.orientation.z,
+      odom->pose.pose.orientation.w);
 
     tf2::Matrix3x3 m(q);
 
@@ -187,68 +177,63 @@ void AutoDockingROS::syncCb(
     pose[1] = odom->pose.pose.position.y;
     pose[2] = yaw;
 
-    //RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, yaw: %f", pose[0], pose[1], pose[2]);
+    // RCLCPP_INFO(this->get_logger(), "x: %f, y: %f, yaw: %f", pose[0], pose[1], pose[2]);
 
-    //update
-    self->dock_.update(ir->data, core->bumper, core->charger, pose);
+    // update
+    this->dock_.update(ir->data, core->bumper, core->charger, pose);
 
-    //publish debug stream
+    // publish debug stream
     auto debug_log = std_msgs::msg::String();
-    debug_log.data = self->dock_.getDebugStream();
+    debug_log.data = this->dock_.getDebugStream();
     debug_jabber_->publish(debug_log);
 
-    //publish command velocity
-    if (self->dock_.canRun()) {
+    // publish command velocity
+    if (this->dock_.canRun()) {
       auto cmd_vel = geometry_msgs::msg::Twist();
-      cmd_vel.linear.x = self->dock_.getVX();
-      cmd_vel.angular.z = self->dock_.getWZ();
+      cmd_vel.linear.x = this->dock_.getVX();
+      cmd_vel.angular.z = this->dock_.getWZ();
       velocity_commander_->publish(cmd_vel);
     }
   }
-
-  return;
 }
 
-void AutoDockingROS::debugCb(const std::shared_ptr<std_msgs::msg::String> msg){
+void AutoDockingROS::debugCb(const std::shared_ptr<std_msgs::msg::String> msg)
+{
   dock_.modeShift(msg->data);
 }
 
 rcl_interfaces::msg::SetParametersResult AutoDockingROS::parametersCallback(
-  const std::vector<rclcpp::Parameter> &parameters
-){
-    rcl_interfaces::msg::SetParametersResult result;
-    result.successful = true;
-    result.reason = "success";
+  const std::vector<rclcpp::Parameter> &parameters)
+{
+  rcl_interfaces::msg::SetParametersResult result;
+  result.successful = true;
+  result.reason = "success";
 
-    for(const auto &param: parameters){
-        //RCLCPP_INFO(this->get_logger(), "%s", param.get_name().c_str());
-        //RCLCPP_INFO(this->get_logger(), "%s", param.get_type_name().c_str());
-        //RCLCPP_INFO(this->get_logger(), "%s", param.value_to_string().c_str());
-
-        if (param.get_name() == "min_abs_v"){
-          if (param.get_type() == rclcpp::ParameterType::PARAMETER_DOUBLE){
-            dock_.setMinAbsV(param.as_double());
-            RCLCPP_INFO(this->get_logger(), "dock_drive update [min_abs_v: %f]", param.as_double());
-          } else {
-            result.successful = false;
-            result.reason = "Failed: dock_drive parameters must be DOUBLE";
-            RCLCPP_INFO(this->get_logger(), "%s", result.reason.c_str());
-          }
-        } else if (param.get_name() == "min_abs_w"){
-          if (param.get_type() == rclcpp::ParameterType::PARAMETER_DOUBLE){
-            dock_.setMinAbsW(param.as_double());
-            RCLCPP_INFO(this->get_logger(), "dock_drive update [min_abs_w: %f]", param.as_double());
-          } else {
-            result.successful = false;
-            result.reason = "Failed: dock_drive parameters must be DOUBLE";
-            RCLCPP_INFO(this->get_logger(), "%s", result.reason.c_str());
-          }
-        }
+  for(const auto &param: parameters){
+    if (param.get_name() == "min_abs_v"){
+      if (param.get_type() == rclcpp::ParameterType::PARAMETER_DOUBLE){
+        dock_.setMinAbsV(param.as_double());
+        RCLCPP_INFO(this->get_logger(), "dock_drive update [min_abs_v: %f]", param.as_double());
+      } else {
+        result.successful = false;
+        result.reason = "Failed: dock_drive parameters must be DOUBLE";
+        RCLCPP_INFO(this->get_logger(), "%s", result.reason.c_str());
+      }
+    } else if (param.get_name() == "min_abs_w"){
+      if (param.get_type() == rclcpp::ParameterType::PARAMETER_DOUBLE){
+        dock_.setMinAbsW(param.as_double());
+        RCLCPP_INFO(this->get_logger(), "dock_drive update [min_abs_w: %f]", param.as_double());
+      } else {
+        result.successful = false;
+        result.reason = "Failed: dock_drive parameters must be DOUBLE";
+        RCLCPP_INFO(this->get_logger(), "%s", result.reason.c_str());
+      }
     }
+  }
 
-    return result;
+  return result;
 }
 
-} //namespace kobuki_auto_docking
+}  // namespace kobuki_auto_docking
 
 RCLCPP_COMPONENTS_REGISTER_NODE(kobuki_auto_docking::AutoDockingROS)
