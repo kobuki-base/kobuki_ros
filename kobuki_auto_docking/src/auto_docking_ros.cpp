@@ -10,19 +10,32 @@
 ** Includes
 *****************************************************************************/
 
+#include <functional>
+#include <memory>
+#include <thread>
+#include <vector>
+
+#include <geometry_msgs/msg/twist.hpp>
+#include <message_filters/subscriber.h>
+#include <message_filters/synchronizer.h>
+#include <nav_msgs/msg/odometry.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/string.hpp>
+
+#include <kobuki_ros_interfaces/msg/dock_infra_red.hpp>
+#include <kobuki_ros_interfaces/msg/sensor_state.hpp>
+
 #include "kobuki_auto_docking/auto_docking_ros.hpp"
 
 namespace kobuki_auto_docking
 {
 AutoDockingROS::AutoDockingROS(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki_auto_docking", options){
-  using namespace std::placeholders;
-
   this->as_ = rclcpp_action::create_server<AutoDocking>(
     this,
     "auto_docking_action",
-    std::bind(&AutoDockingROS::handle_goal, this, _1, _2),
-    std::bind(&AutoDockingROS::handle_cancel, this, _1),
-    std::bind(&AutoDockingROS::handle_accepted, this, _1));
+    std::bind(&AutoDockingROS::handle_goal, this, std::placeholders::_1, std::placeholders::_2),
+    std::bind(&AutoDockingROS::handle_cancel, this, std::placeholders::_1),
+    std::bind(&AutoDockingROS::handle_accepted, this, std::placeholders::_1));
 
   // Configure docking drive
   double min_abs_v = this->declare_parameter<double>("min_abs_v", 0.01);
@@ -40,13 +53,13 @@ AutoDockingROS::AutoDockingROS(const rclcpp::NodeOptions & options) : rclcpp::No
   debug_jabber_ = this->create_publisher<std_msgs::msg::String>("debug/feedback", 10);
 
   debug_ = this->create_subscription<std_msgs::msg::String>(
-    "debug/mode_shift", 10, std::bind(&AutoDockingROS::debugCb, this, _1));
+    "debug/mode_shift", 10, std::bind(&AutoDockingROS::debugCb, this, std::placeholders::_1));
 
-  odom_sub_.reset(new message_filters::Subscriber<nav_msgs::msg::Odometry>(this, "odom"));
-  core_sub_.reset(new message_filters::Subscriber<kobuki_ros_interfaces::msg::SensorState>(this, "sensors/core"));
-  ir_sub_.reset(new message_filters::Subscriber<kobuki_ros_interfaces::msg::DockInfraRed>(this, "sensors/dock_ir"));
+  odom_sub_ = std::make_shared<message_filters::Subscriber<nav_msgs::msg::Odometry>>(this, "odom");
+  core_sub_ = std::make_shared<message_filters::Subscriber<kobuki_ros_interfaces::msg::SensorState>>(this, "sensors/core");
+  ir_sub_ = std::make_shared<message_filters::Subscriber<kobuki_ros_interfaces::msg::DockInfraRed>>(this, "sensors/dock_ir");
 
-  sync_.reset(new message_filters::Synchronizer<SyncPolicy>(SyncPolicy(10), *odom_sub_, *core_sub_, *ir_sub_));
+  sync_ = std::make_shared<message_filters::Synchronizer<SyncPolicy>>(SyncPolicy(10), *odom_sub_, *core_sub_, *ir_sub_);
   sync_->registerCallback(&AutoDockingROS::syncCb, this);
 
   dock_.init();
@@ -63,9 +76,10 @@ rclcpp_action::GoalResponse AutoDockingROS::handle_goal(
   const rclcpp_action::GoalUUID & uuid,
   std::shared_ptr<const AutoDocking::Goal> goal)
 {
+  (void)uuid;
+  (void)goal;
+
   RCLCPP_INFO(this->get_logger(), "Received goal request");
-  (void)uuid; //because -Werror=unused-parameter
-  (void)goal; //because -Werror=unused-parameter
 
   if (dock_.isEnabled()) {
     auto result_ = std::make_shared<AutoDocking::Result>();
@@ -81,10 +95,11 @@ rclcpp_action::GoalResponse AutoDockingROS::handle_goal(
 rclcpp_action::CancelResponse AutoDockingROS::handle_cancel(
   const std::shared_ptr<GoalHandleAutoDocking> goal_handle)
 {
+  (void)goal_handle;
+
   // (Bug) The program crashed after terminating (Ctrl+C) the activate.sh
   // info: terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
   RCLCPP_INFO(this->get_logger(), "Received request to cancel goal");
-  (void)goal_handle; //because -Werror=unused-parameter
 
   if (dock_.isEnabled()) {
     dock_.disable();
@@ -101,8 +116,7 @@ rclcpp_action::CancelResponse AutoDockingROS::handle_cancel(
 void AutoDockingROS::handle_accepted(
   const std::shared_ptr<GoalHandleAutoDocking> goal_handle)
 {
-  using namespace std::placeholders;
-  std::thread{std::bind(&AutoDockingROS::execute, this, _1), goal_handle}.detach();
+  std::thread{std::bind(&AutoDockingROS::execute, this, std::placeholders::_1), goal_handle}.detach();
 }
 
 void AutoDockingROS::execute(
@@ -203,7 +217,7 @@ void AutoDockingROS::debugCb(const std::shared_ptr<std_msgs::msg::String> msg)
 }
 
 rcl_interfaces::msg::SetParametersResult AutoDockingROS::parametersCallback(
-  const std::vector<rclcpp::Parameter> &parameters)
+  const std::vector<rclcpp::Parameter> & parameters)
 {
   rcl_interfaces::msg::SetParametersResult result;
   result.successful = true;

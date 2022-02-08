@@ -14,7 +14,7 @@ def generate_launch_description():
 
     # kobuki_ros node
     params_file = os.path.join(share_dir, 'config', 'kobuki_node_params.yaml')
-    
+
     with open(params_file, 'r') as f:
         params = yaml.safe_load(f)['kobuki_ros_node']['ros__parameters']
 
@@ -30,16 +30,11 @@ def generate_launch_description():
 
     with open(params_file, 'r') as f:
         params = yaml.safe_load(f)['kobuki_auto_docking']['ros__parameters']
-    
+
     kobuki_auto_docking_node = ComposableNode(
         package='kobuki_auto_docking',
         plugin='kobuki_auto_docking::AutoDockingROS',
         name='kobuki_auto_docking',
-        #remappings=[
-        #    ('velocity', '/commands/velocity'),
-        #    ('core', 'sensors/core'),
-        #    ('dock_ir', 'sensors/dock_ir')
-        #],
         parameters=[params]
     )
 
