@@ -19,8 +19,13 @@
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
 #include <nav_msgs/msg/odometry.hpp>
+#include <rcl_interfaces/msg/parameter_event.hpp>
+#include <rclcpp/parameter_events_filter.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
 #include <std_msgs/msg/string.hpp>
+
+#include <ecl/linear_algebra.hpp>
 
 #include <kobuki_ros_interfaces/msg/dock_infra_red.hpp>
 #include <kobuki_ros_interfaces/msg/sensor_state.hpp>
@@ -45,8 +50,9 @@ AutoDockingROS::AutoDockingROS(const rclcpp::NodeOptions & options) : rclcpp::No
   dock_.setMinAbsW(min_abs_w);
 
   // parameter callback
-  param_callback_handle_ = this->add_on_set_parameters_callback(
-    std::bind(&AutoDockingROS::parametersCallback, this, std::placeholders::_1));
+  parameter_subscription_ = rclcpp::AsyncParametersClient::on_parameter_event(
+    this->get_node_topics_interface(),
+    std::bind(&AutoDockingROS::on_parameter_event, this, std::placeholders::_1));
 
   // Publishers and subscribers
   velocity_commander_ = this->create_publisher<geometry_msgs::msg::Twist>("commands/velocity", 10);
@@ -216,36 +222,25 @@ void AutoDockingROS::debugCb(const std::shared_ptr<std_msgs::msg::String> msg)
   dock_.modeShift(msg->data);
 }
 
-rcl_interfaces::msg::SetParametersResult AutoDockingROS::parametersCallback(
-  const std::vector<rclcpp::Parameter> & parameters)
+void AutoDockingROS::on_parameter_event(
+  std::shared_ptr<rcl_interfaces::msg::ParameterEvent> event)
 {
-  rcl_interfaces::msg::SetParametersResult result;
-  result.successful = true;
-  result.reason = "success";
-
-  for(const auto &param: parameters){
-    if (param.get_name() == "min_abs_v"){
-      if (param.get_type() == rclcpp::ParameterType::PARAMETER_DOUBLE){
-        dock_.setMinAbsV(param.as_double());
-        RCLCPP_INFO(this->get_logger(), "dock_drive update [min_abs_v: %f]", param.as_double());
-      } else {
-        result.successful = false;
-        result.reason = "Failed: dock_drive parameters must be DOUBLE";
-        RCLCPP_INFO(this->get_logger(), "%s", result.reason.c_str());
-      }
-    } else if (param.get_name() == "min_abs_w"){
-      if (param.get_type() == rclcpp::ParameterType::PARAMETER_DOUBLE){
-        dock_.setMinAbsW(param.as_double());
-        RCLCPP_INFO(this->get_logger(), "dock_drive update [min_abs_w: %f]", param.as_double());
-      } else {
-        result.successful = false;
-        result.reason = "Failed: dock_drive parameters must be DOUBLE";
-        RCLCPP_INFO(this->get_logger(), "%s", result.reason.c_str());
-      }
-    }
+  // Filter out events from other nodes
+  if (event->node != this->get_fully_qualified_name()) {
+    return;
   }
 
-  return result;
+  // Filter for "min_abs_v" or "min_abs_w" being changed.
+  rclcpp::ParameterEventsFilter filter(event, {"min_abs_v", "min_abs_w"}, {rclcpp::ParameterEventsFilter::EventType::CHANGED});
+  for (const rclcpp::ParameterEventsFilter::EventPair & it : filter.get_events()) {
+    if (it.second->name == "min_abs_v") {
+      RCLCPP_INFO(this->get_logger(), "dock_drive update [min_abs_v: %f]", it.second->value.double_value);
+      dock_.setMinAbsV(it.second->value.double_value);
+    } else if (it.second->name == "min_abs_w") {
+      RCLCPP_INFO(this->get_logger(), "dock_drive update [min_abs_w: %f]", it.second->value.double_value);
+      dock_.setMinAbsW(it.second->value.double_value);
+    }
+  }
 }
 
 }  // namespace kobuki_auto_docking

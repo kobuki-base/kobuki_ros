@@ -19,12 +19,10 @@
 
 #include <memory>
 #include <string>
-#include <vector>
 
 #include <rclcpp/rclcpp.hpp>
-#include <rclcpp_components/register_node_macro.hpp>
 #include <rclcpp_action/rclcpp_action.hpp>
-#include <rcl_interfaces/msg/set_parameters_result.hpp>
+#include <rcl_interfaces/msg/parameter_event.hpp>
 
 #include <message_filters/subscriber.h>
 #include <message_filters/time_synchronizer.h>
@@ -40,9 +38,6 @@
 #include <kobuki_ros_interfaces/msg/dock_infra_red.hpp>
 
 #include <kobuki_core/dock_drive.hpp>
-
-#include <ecl/geometry.hpp>
-#include <ecl/linear_algebra.hpp>
 
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
@@ -79,7 +74,7 @@ private:
 
   std::shared_ptr<message_filters::Synchronizer<SyncPolicy>> sync_;
 
-  OnSetParametersCallbackHandle::SharedPtr param_callback_handle_;
+  std::shared_ptr<rclcpp::Subscription<rcl_interfaces::msg::ParameterEvent>> parameter_subscription_;
 
   void syncCb(
     const std::shared_ptr<nav_msgs::msg::Odometry> odom,
@@ -101,9 +96,8 @@ private:
   void execute(
     const std::shared_ptr<GoalHandleAutoDocking> goal_handle);
 
-  rcl_interfaces::msg::SetParametersResult parametersCallback(
-    const std::vector<rclcpp::Parameter> &parameters
-  );
+  void on_parameter_event(
+    std::shared_ptr<rcl_interfaces::msg::ParameterEvent> event);
 };
 
 }  // namespace kobuki_auto_docking

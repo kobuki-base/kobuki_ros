@@ -30,8 +30,6 @@
   <depend>kobuki_core</depend>
   <depend>kobuki_ros_interfaces</depend>
 
-  <depend>ecl_threads</depend>
-  <depend>ecl_geometry</depend>
   <depend>ecl_linear_algebra</depend>
 
   <export>

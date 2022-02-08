@@ -11,7 +11,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake_ros REQUIRED)
-find_package(ecl_geometry REQUIRED)
 find_package(ecl_linear_algebra REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(kobuki_core REQUIRED)
@@ -49,7 +48,6 @@ ament_target_dependencies(kobuki_auto_docking
   "tf2_ros"
 )
 target_link_libraries(kobuki_auto_docking
-  ecl_geometry::ecl_geometry
   ecl_linear_algebra::ecl_linear_algebra
 )
 
