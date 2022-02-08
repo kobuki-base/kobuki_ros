@@ -31,6 +31,14 @@ ament_target_dependencies(kobuki_bumper2pc
   "sensor_msgs"
 )
 
+add_executable(kobuki_bumper2pc_node src/kobuki_bumper2pc_node.cpp)
+ament_target_dependencies(kobuki_bumper2pc_node
+  "rclcpp"
+)
+target_link_libraries(kobuki_bumper2pc_node
+  kobuki_bumper2pc
+)
+
 rclcpp_components_register_nodes(kobuki_bumper2pc
   "kobuki_bumper2pc::Bumper2PcNode")
 
@@ -43,7 +51,9 @@ install(TARGETS kobuki_bumper2pc
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}
 )
-
+install(TARGETS kobuki_bumper2pc_node
+  DESTINATION lib/${PROJECT_NAME}
+)
 install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
 )

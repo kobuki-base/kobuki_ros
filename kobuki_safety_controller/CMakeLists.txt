@@ -41,7 +41,7 @@ install(TARGETS kobuki_safety_controller
 )
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}
-  )
+)
 install(TARGETS kobuki_safety_controller_node
   DESTINATION lib/${PROJECT_NAME}
 )
