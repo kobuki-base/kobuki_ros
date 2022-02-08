@@ -53,7 +53,6 @@
 #include <vector>
 
 #include <geometry_msgs/msg/twist.hpp>  // for velocity commands
-#include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include <rclcpp/rclcpp.hpp>
 
 #include <kobuki_ros_interfaces/msg/keyboard_input.hpp> // keycodes from remote teleops.
@@ -96,11 +95,7 @@ private:
   // dealing with keyboard strokes and remote keyboard strokes
   std::mutex cmd_mutex_;
   std::shared_ptr<geometry_msgs::msg::Twist> cmd_;
-  double linear_vel_step_, linear_vel_max_;
-  double angular_vel_step_, angular_vel_max_;
   rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_cb_;
-  rcl_interfaces::msg::SetParametersResult parameterUpdate(const std::vector<rclcpp::Parameter> & parameters);
 
   /*********************
    ** Runtime
