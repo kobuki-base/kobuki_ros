@@ -1,4 +1,4 @@
-<package>
+<package format="2">
   <name>kobuki_auto_docking</name>
   <version>0.7.6</version>
   <description>
@@ -12,48 +12,27 @@
   <url type="repository">https://github.com/kobuki-base/kobuki_ros</url>
   <url type="website">http://ros.org/wiki/kobuki_auto_docking</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
 
-  <build_depend>roscpp</build_depend>
-  <build_depend>rospy</build_depend>
-  <build_depend>nodelet</build_depend>
-  <build_depend>pluginlib</build_depend>
-  <build_depend>message_filters</build_depend>
-  <build_depend>actionlib</build_depend>
-  <build_depend>kdl_conversions</build_depend>
-  
-  <build_depend>std_msgs</build_depend>
-  <build_depend>nav_msgs</build_depend>
-  <build_depend>geometry_msgs</build_depend>
-  <build_depend>actionlib_msgs</build_depend>
-  <build_depend>kobuki_msgs</build_depend>
-  <build_depend>kobuki_dock_drive</build_depend>
+  <depend>rclcpp</depend>
+  <depend>rclpy</depend>
+  <depend>rclcpp_components</depend>
 
-  <build_depend>ecl_threads</build_depend>
-  <build_depend>ecl_geometry</build_depend>
-  <build_depend>ecl_linear_algebra</build_depend>
+  <depend>message_filters</depend>
+  <depend>rclcpp_action</depend>
 
-  <run_depend>roscpp</run_depend>
-  <run_depend>rospy</run_depend>
-  <run_depend>nodelet</run_depend>
-  <run_depend>pluginlib</run_depend>
-  <run_depend>message_filters</run_depend>
-  <run_depend>actionlib</run_depend>
-  <run_depend>kdl_conversions</run_depend>
-  
-  <run_depend>std_msgs</run_depend>
-  <run_depend>nav_msgs</run_depend>
-  <run_depend>geometry_msgs</run_depend>
-  <run_depend>actionlib_msgs</run_depend>
-  <run_depend>kobuki_msgs</run_depend>
-  <run_depend>kobuki_dock_drive</run_depend>
-  <run_depend>yocs_cmd_vel_mux</run_depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>actionlib_msgs</depend>
+  <depend>tf2_geometry_msgs</depend>
 
-  <run_depend>ecl_threads</run_depend>
-  <run_depend>ecl_geometry</run_depend>
-  <run_depend>ecl_linear_algebra</run_depend>
-  
+  <depend>kobuki_core</depend>
+  <depend>kobuki_ros_interfaces</depend>
+
+  <depend>ecl_linear_algebra</depend>
+
   <export>
-    <nodelet plugin="${prefix}/plugins/nodelet_plugins.xml"/>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
