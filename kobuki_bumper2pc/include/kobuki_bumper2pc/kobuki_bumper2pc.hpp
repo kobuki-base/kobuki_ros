@@ -80,16 +80,11 @@ private:
   uint8_t prev_bumper_;
   uint8_t prev_cliff_;
 
-  float pc_radius_;
-  float pc_height_;
-  float side_point_angle_;
-  std::string base_link_frame_;
-
   float p_side_x_;
   float p_side_y_;
   float n_side_y_;
 
-  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr  pointcloud_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_pub_;
   rclcpp::Subscription<kobuki_ros_interfaces::msg::SensorState>::SharedPtr core_sensor_sub_;
 
   sensor_msgs::msg::PointCloud2 pointcloud_;
@@ -100,7 +95,7 @@ private:
   void onParameterEvent(
     std::shared_ptr<rcl_interfaces::msg::ParameterEvent> event);
 
-  void reconfigurePointCloud(float radius, float height, float angle, const std::string & base_link_frame);
+  void reconfigurePointCloud();
 
   /**
    * @brief Core sensors state structure callback
