@@ -21,16 +21,9 @@ ament_target_dependencies(kobuki_keyop
   "rclcpp_components"
 )
 
-add_executable(kobuki_keyop_node src/keyop_node.cpp)
-ament_target_dependencies(kobuki_keyop_node
-  "rclcpp"
-)
-target_link_libraries(kobuki_keyop_node
-  kobuki_keyop
-)
-
-rclcpp_components_register_nodes(kobuki_keyop
-  "kobuki_keyop::KeyOp")
+rclcpp_components_register_node(kobuki_keyop
+  PLUGIN "kobuki_keyop::KeyOp"
+  EXECUTABLE kobuki_keyop_node)
 
 install(TARGETS kobuki_keyop
   ARCHIVE DESTINATION lib
@@ -40,10 +33,6 @@ install(TARGETS kobuki_keyop
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}
 )
-install(TARGETS kobuki_keyop_node
-  DESTINATION lib/${PROJECT_NAME}
-)
-
 install(DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
 )

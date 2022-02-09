@@ -30,16 +30,9 @@ ament_target_dependencies(kobuki_random_walker
   "std_msgs"
 )
 
-add_executable(kobuki_random_walker_node src/random_walker_node.cpp)
-ament_target_dependencies(kobuki_random_walker_node
-  "rclcpp"
-)
-target_link_libraries(kobuki_random_walker_node
-  kobuki_random_walker
-)
-
-rclcpp_components_register_nodes(kobuki_random_walker
-  "kobuki_random_walker::RandomWalkerNode")
+rclcpp_components_register_node(kobuki_random_walker
+  PLUGIN "kobuki_random_walker::RandomWalkerNode"
+  EXECUTABLE kobuki_random_walker_node)
 
 install(TARGETS kobuki_random_walker
   ARCHIVE DESTINATION lib
@@ -49,9 +42,6 @@ install(TARGETS kobuki_random_walker
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}
-)
-install(TARGETS kobuki_random_walker_node
-  DESTINATION lib/${PROJECT_NAME}
 )
 install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}

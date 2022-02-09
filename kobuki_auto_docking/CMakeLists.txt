@@ -51,8 +51,9 @@ target_link_libraries(kobuki_auto_docking
   ecl_linear_algebra::ecl_linear_algebra
 )
 
-rclcpp_components_register_nodes(kobuki_auto_docking
-  "kobuki_auto_docking::AutoDockingROS")
+rclcpp_components_register_node(kobuki_auto_docking
+  PLUGIN "kobuki_auto_docking::AutoDockingROS"
+  EXECUTABLE kobuki_auto_docking_node)
 
 install(TARGETS kobuki_auto_docking
   ARCHIVE DESTINATION lib
