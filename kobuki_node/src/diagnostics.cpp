@@ -15,6 +15,9 @@
 #include <diagnostic_msgs/msg/diagnostic_status.hpp>
 #include <diagnostic_updater/diagnostic_updater.hpp>
 
+#include <kobuki_core/modules/battery.hpp>
+#include <kobuki_core/packets/core_sensors.hpp>
+
 #include "kobuki_node/diagnostics.hpp"
 
 /*****************************************************************************
