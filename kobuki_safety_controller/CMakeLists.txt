@@ -23,16 +23,9 @@ ament_target_dependencies(kobuki_safety_controller
   "std_msgs"
 )
 
-add_executable(kobuki_safety_controller_node src/safety_controller_node.cpp)
-ament_target_dependencies(kobuki_safety_controller_node
-  "rclcpp"
-)
-target_link_libraries(kobuki_safety_controller_node
-  kobuki_safety_controller
-)
-
-rclcpp_components_register_nodes(kobuki_safety_controller
-  "kobuki_safety_controller::SafetyController")
+rclcpp_components_register_node(kobuki_safety_controller
+  PLUGIN "kobuki_safety_controller::SafetyController"
+  EXECUTABLE kobuki_safety_controller_node)
 
 install(TARGETS kobuki_safety_controller
   ARCHIVE DESTINATION lib
@@ -41,9 +34,6 @@ install(TARGETS kobuki_safety_controller
 )
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION include/${PROJECT_NAME}
-)
-install(TARGETS kobuki_safety_controller_node
-  DESTINATION lib/${PROJECT_NAME}
 )
 install(DIRECTORY config launch
   DESTINATION share/${PROJECT_NAME}

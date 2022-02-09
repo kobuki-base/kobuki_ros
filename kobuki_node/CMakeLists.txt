@@ -55,25 +55,14 @@ target_link_libraries(kobuki_ros
   ecl_sigslots::ecl_sigslots
 )
 
-add_executable(kobuki_ros_node src/kobuki_ros_node.cpp)
-ament_target_dependencies(kobuki_ros_node
-  "rclcpp"
-)
-target_link_libraries(kobuki_ros_node
-  kobuki_ros
-)
-
-rclcpp_components_register_nodes(kobuki_ros
-  "kobuki_node::KobukiRos")
+rclcpp_components_register_node(kobuki_ros
+  PLUGIN "kobuki_node::KobukiRos"
+  EXECUTABLE kobuki_ros_node)
 
 install(TARGETS kobuki_ros
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
-)
-
-install(TARGETS kobuki_ros_node
-  DESTINATION lib/kobuki_node
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
