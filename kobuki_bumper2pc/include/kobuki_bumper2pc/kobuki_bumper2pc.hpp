@@ -47,7 +47,6 @@
  *****************************************************************************/
 
 #include <memory>
-#include <string>
 
 #include <rcl_interfaces/msg/parameter_event.hpp>
 #include <rclcpp/rclcpp.hpp>

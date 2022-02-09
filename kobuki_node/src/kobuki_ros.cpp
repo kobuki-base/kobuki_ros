@@ -39,10 +39,12 @@
 #include <chrono>
 #include <cfloat>
 #include <functional>
+#include <limits>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 #include <angles/angles.h>
 #include <geometry_msgs/msg/quaternion.hpp>
