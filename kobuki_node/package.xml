@@ -2,9 +2,9 @@
 <?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="2">
   <name>kobuki_node</name>
-  <version>0.7.6</version>
+  <version>1.0.0</version>
   <description>
-      ROS node for Kobuki: ROS wrapper for the Kobuki driver.
+      ROS 2 node for Kobuki: ROS wrapper for the Kobuki driver.
   </description>
   <author>Chris Lalancette</author>
   <author>Daniel Stonier</author>
