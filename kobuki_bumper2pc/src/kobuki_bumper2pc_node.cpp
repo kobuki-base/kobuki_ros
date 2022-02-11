@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, Open Source Robotics Foundation, Inc.
+ * Copyright (c) 2022, Open Source Robotics Foundation, Inc.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,13 +31,13 @@
 
 #include <rclcpp/rclcpp.hpp>
 
-#include "kobuki_safety_controller/safety_controller.hpp"
+#include "kobuki_bumper2pc/kobuki_bumper2pc.hpp"
 
 int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
 
-  rclcpp::spin(std::make_shared<kobuki_safety_controller::SafetyController>(rclcpp::NodeOptions()));
+  rclcpp::spin(std::make_shared<kobuki_bumper2pc::Bumper2PcNode>(rclcpp::NodeOptions()));
 
   rclcpp::shutdown();
 

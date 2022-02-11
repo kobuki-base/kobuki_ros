@@ -15,7 +15,6 @@
 
   <!-- Ros -->
   <build_depend>geometry_msgs</build_depend>
-  <build_depend>rcl_interfaces</build_depend>
   <build_depend>rclcpp</build_depend>
   <build_depend>rclcpp_components</build_depend>
 
@@ -28,7 +27,6 @@
 
   <!-- Ros -->
   <exec_depend>geometry_msgs</exec_depend>
-  <exec_depend>rcl_interfaces</exec_depend>
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>rclcpp_components</exec_depend>
 

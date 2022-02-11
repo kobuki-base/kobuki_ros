@@ -18,6 +18,7 @@
 #include <vector>
 
 #include <rcl_interfaces/msg/set_parameters_result.hpp>
+#include <rclcpp/parameter_events_filter.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
@@ -64,7 +65,8 @@ void Bumper2PcNode::coreSensorCB(const std::shared_ptr<kobuki_ros_interfaces::ms
   if ((msg->bumper & kobuki_ros_interfaces::msg::SensorState::BUMPER_CENTRE) ||
       (msg->cliff  & kobuki_ros_interfaces::msg::SensorState::CLIFF_CENTRE))
   {
-    memcpy(&pointcloud_.data[1 * pointcloud_.point_step + pointcloud_.fields[0].offset], &pc_radius_, sizeof(float));
+    float radius = static_cast<float>(get_parameter("pointcloud_radius").get_value<double>());
+    memcpy(&pointcloud_.data[1 * pointcloud_.point_step + pointcloud_.fields[0].offset], &radius, sizeof(float));
   }
   else
   {
@@ -87,70 +89,43 @@ void Bumper2PcNode::coreSensorCB(const std::shared_ptr<kobuki_ros_interfaces::ms
   pointcloud_pub_->publish(pointcloud_);
 }
 
-rcl_interfaces::msg::SetParametersResult Bumper2PcNode::paramChangeCallback(const std::vector<rclcpp::Parameter> & parameters)
+void Bumper2PcNode::onParameterEvent(
+  std::shared_ptr<rcl_interfaces::msg::ParameterEvent> event)
 {
-  rcl_interfaces::msg::SetParametersResult result;
-  result.successful = true;
-
-  bool changed = false;
-  float radius = pc_radius_;
-  float height = pc_height_;
-  float angle = side_point_angle_;
-  std::string frame = base_link_frame_;
-
-  for (const rclcpp::Parameter & parameter : parameters)
-  {
-    if (parameter.get_name() == "pointcloud_radius")
-    {
-      radius = parameter.as_double();
-      changed = true;
-    }
-    else if (parameter.get_name() == "pointcloud_height")
-    {
-      height = parameter.as_double();
-      changed = true;
-    }
-    else if (parameter.get_name() == "side_point_angle")
-    {
-      angle = parameter.as_double();
-      changed = true;
-    }
-    else if (parameter.get_name() == "base_link_frame")
-    {
-      base_link_frame_ = parameter.as_string();
-      changed = true;
-    }
+  // Filter out events from other nodes
+  if (event->node != this->get_fully_qualified_name()) {
+    return;
   }
 
-  if (changed)
+  // Filter for "pointcloud_radius", "pointcloud_height", "side_point_angle", or "base_link_frame" being changed.
+  rclcpp::ParameterEventsFilter filter(event, {"pointcloud_radius", "pointcloud_height", "side_point_angle", "base_link_frame"},
+    {rclcpp::ParameterEventsFilter::EventType::CHANGED});
+  if (!filter.get_events().empty())
   {
-    reconfigurePointCloud(radius, height, angle, frame);
+    reconfigurePointCloud();
   }
-
-  return result;
 }
 
-void Bumper2PcNode::reconfigurePointCloud(float radius, float height, float angle, const std::string & base_link_frame)
+void Bumper2PcNode::reconfigurePointCloud()
 {
-  pc_radius_ = radius;
-  pc_height_ = height;
-  side_point_angle_ = angle;
-  base_link_frame_ = base_link_frame;
-
   // Lateral points x/y coordinates; we need to store float values to memcopy later
-  p_side_x_ = + pc_radius_*sin(angle); // angle degrees from vertical
-  p_side_y_ = + pc_radius_*cos(angle); // angle degrees from vertical
-  n_side_y_ = - pc_radius_*cos(angle); // angle degrees from vertical
+  float radius = static_cast<float>(get_parameter("pointcloud_radius").get_value<double>());
+  float angle = static_cast<float>(get_parameter("side_point_angle").get_value<double>());
+  p_side_x_ = + radius*sin(angle); // angle degrees from vertical
+  p_side_y_ = + radius*cos(angle); // angle degrees from vertical
+  n_side_y_ = - radius*cos(angle); // angle degrees from vertical
 
   // Prepare constant parts of the pointcloud message to be  published
-  pointcloud_.header.frame_id = base_link_frame;
+  pointcloud_.header.frame_id = get_parameter("base_link_frame").get_value<std::string>();
+
+  float height = static_cast<float>(this->get_parameter("pointcloud_height").get_value<double>());
 
   // z: constant elevation from base frame
-  memcpy(&pointcloud_.data[0 * pointcloud_.point_step + pointcloud_.fields[2].offset], &pc_height_, sizeof(float));
-  memcpy(&pointcloud_.data[1 * pointcloud_.point_step + pointcloud_.fields[2].offset], &pc_height_, sizeof(float));
-  memcpy(&pointcloud_.data[2 * pointcloud_.point_step + pointcloud_.fields[2].offset], &pc_height_, sizeof(float));
+  memcpy(&pointcloud_.data[0 * pointcloud_.point_step + pointcloud_.fields[2].offset], &height, sizeof(float));
+  memcpy(&pointcloud_.data[1 * pointcloud_.point_step + pointcloud_.fields[2].offset], &height, sizeof(float));
+  memcpy(&pointcloud_.data[2 * pointcloud_.point_step + pointcloud_.fields[2].offset], &height, sizeof(float));
 
-  RCLCPP_INFO(get_logger(), "Bumper/cliff pointcloud configured at distance %f and height %f from base frame", pc_radius_, pc_height_);
+  RCLCPP_INFO(get_logger(), "Bumper/cliff pointcloud configured at distance %f and height %f from base frame", radius, height);
 }
 
 Bumper2PcNode::Bumper2PcNode(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki_bumper2pc", options),
@@ -165,10 +140,10 @@ Bumper2PcNode::Bumper2PcNode(const rclcpp::NodeOptions & options) : rclcpp::Node
   // but if it's too big, hit obstacles will be mapped too far from the robot and the navigation around
   // them will probably fail.
 
-  float radius = declare_parameter("pointcloud_radius", 0.25);
-  float height = declare_parameter("pointcloud_height", 0.04);
-  float angle = declare_parameter("side_point_angle", 0.34906585);
-  std::string base_link_frame = declare_parameter("base_link_frame", "base_link");
+  declare_parameter("pointcloud_radius", 0.25);
+  declare_parameter("pointcloud_height", 0.04);
+  declare_parameter("side_point_angle", 0.34906585);
+  declare_parameter("base_link_frame", "base_link");
 
   // Prepare constant parts of the pointcloud message to be published
   pointcloud_.width  = 3;
@@ -202,12 +177,14 @@ Bumper2PcNode::Bumper2PcNode(const rclcpp::NodeOptions & options) : rclcpp::Node
   memcpy(&pointcloud_.data[1 * pointcloud_.point_step + pointcloud_.fields[1].offset], &ZERO, sizeof(float));
 
   // Prepare configurable parts of the pointcloud message to be published
-  reconfigurePointCloud(radius, height, angle, base_link_frame);
+  reconfigurePointCloud();
 
   pointcloud_pub_  = create_publisher<sensor_msgs::msg::PointCloud2>("pointcloud", 10);
   core_sensor_sub_ = create_subscription<kobuki_ros_interfaces::msg::SensorState>("core_sensors", rclcpp::QoS(10), std::bind(&Bumper2PcNode::coreSensorCB, this, std::placeholders::_1));
 
-  param_change_handle_ = add_on_set_parameters_callback(std::bind(&Bumper2PcNode::paramChangeCallback, this, std::placeholders::_1));
+  parameter_subscription_ = rclcpp::AsyncParametersClient::on_parameter_event(
+    this->get_node_topics_interface(),
+    std::bind(&Bumper2PcNode::onParameterEvent, this, std::placeholders::_1));
 }
 
 } // namespace kobuki_bumper2pc

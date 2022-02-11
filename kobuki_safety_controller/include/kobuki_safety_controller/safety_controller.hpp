@@ -50,7 +50,6 @@
 *****************************************************************************/
 
 #include <memory>
-#include <vector>
 
 #include <geometry_msgs/msg/twist.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -95,10 +94,8 @@ private:
   bool wheel_left_dropped_, wheel_right_dropped_;
   bool bumper_left_pressed_, bumper_center_pressed_, bumper_right_pressed_;
   bool cliff_left_detected_, cliff_center_detected_, cliff_right_detected_;
-  rclcpp::Duration time_to_extend_bump_cliff_events_;
   rclcpp::Time last_event_time_;
   rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr param_cb_;
 
   std::unique_ptr<geometry_msgs::msg::Twist> msg_; // velocity command
 
@@ -152,9 +149,6 @@ private:
    * @param msg incoming topic message
    */
   void resetSafetyStatesCB(const std_msgs::msg::Empty::SharedPtr msg);
-
-rcl_interfaces::msg::SetParametersResult parameterUpdate(
-  const std::vector<rclcpp::Parameter> & parameters);
 };
 
 

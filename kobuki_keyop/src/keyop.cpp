@@ -51,7 +51,6 @@
 #include <vector>
 
 #include <geometry_msgs/msg/twist.hpp>
-#include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 
@@ -86,15 +85,15 @@ KeyOp::KeyOp(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki_keyop_n
   /*********************
    ** Parameters
    **********************/
-  linear_vel_step_ = this->declare_parameter("linear_vel_step", 0.1);
-  linear_vel_max_ = this->declare_parameter("linear_vel_max", 3.4);
-  angular_vel_step_ = this->declare_parameter("angular_vel_step", 0.02);
-  angular_vel_max_ = this->declare_parameter("angular_vel_max", 1.2);
+  double linear_vel_step = this->declare_parameter("linear_vel_step", 0.1);
+  double linear_vel_max = this->declare_parameter("linear_vel_max", 3.4);
+  double angular_vel_step = this->declare_parameter("angular_vel_step", 0.02);
+  double angular_vel_max = this->declare_parameter("angular_vel_max", 1.2);
 
-  RCLCPP_INFO(get_logger(), "KeyOp : using linear  vel step [%f].", linear_vel_step_);
-  RCLCPP_INFO(get_logger(), "KeyOp : using linear  vel max  [%f].", linear_vel_max_);
-  RCLCPP_INFO(get_logger(), "KeyOp : using angular vel step [%f].", angular_vel_step_);
-  RCLCPP_INFO(get_logger(), "KeyOp : using angular vel max  [%f].", angular_vel_max_);
+  RCLCPP_INFO(get_logger(), "KeyOp : using linear  vel step [%f].", linear_vel_step);
+  RCLCPP_INFO(get_logger(), "KeyOp : using linear  vel max  [%f].", linear_vel_max);
+  RCLCPP_INFO(get_logger(), "KeyOp : using angular vel step [%f].", angular_vel_step);
+  RCLCPP_INFO(get_logger(), "KeyOp : using angular vel max  [%f].", angular_vel_max);
 
   /*********************
    ** Subscribers
@@ -114,10 +113,6 @@ KeyOp::KeyOp(const rclcpp::NodeOptions & options) : rclcpp::Node("kobuki_keyop_n
   power_status_ = true;
 
   timer_ = this->create_wall_timer(std::chrono::milliseconds(100), std::bind(&KeyOp::spin, this));
-
-  param_cb_ =
-    add_on_set_parameters_callback(std::bind(&KeyOp::parameterUpdate, this,
-      std::placeholders::_1));
 
   // start keyboard input thread
   thread_ = std::thread(&KeyOp::keyboardInputLoop, this);
@@ -156,71 +151,6 @@ void KeyOp::spin()
     velocity_publisher_->publish(*cmd_);
     last_zero_vel_sent_ = true;
   }
-}
-
-rcl_interfaces::msg::SetParametersResult KeyOp::parameterUpdate(const std::vector<rclcpp::Parameter> & parameters)
-{
-  rcl_interfaces::msg::SetParametersResult result;
-  result.successful = true;
-
-  // Holding onto this lock prevents processKeyboardInput() from happening
-  // concurrently with this callback.  This is a bit of overkill, but it ensures
-  // that the keyboard processing always has a consistent view of the
-  // parameters, and since this is called infrequently it probably won't be
-  // a bottleneck.
-  std::lock_guard<std::mutex> lk(cmd_mutex_);
-
-  for (const rclcpp::Parameter & parameter : parameters)
-  {
-    if (parameter.get_name() == "linear_vel_step")
-    {
-      if (parameter.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE)
-      {
-        result.successful = false;
-        result.reason = "linear_vel_step must be a double";
-        break;
-      }
-      linear_vel_step_ = parameter.get_value<double>();
-    }
-    else if (parameter.get_name() == "linear_vel_max")
-    {
-      if (parameter.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE)
-      {
-        result.successful = false;
-        result.reason = "linear_vel_max must be a double";
-        break;
-      }
-      linear_vel_max_ = parameter.get_value<double>();
-    }
-    else if (parameter.get_name() == "angular_vel_step")
-    {
-      if (parameter.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE)
-      {
-        result.successful = false;
-        result.reason = "angular_vel_step must be a double";
-        break;
-      }
-      angular_vel_step_ = parameter.get_value<double>();
-    }
-    else if (parameter.get_name() == "angular_vel_max")
-    {
-      if (parameter.get_type() != rclcpp::ParameterType::PARAMETER_DOUBLE)
-      {
-        result.successful = false;
-        result.reason = "angular_vel_max must be a double";
-        break;
-      }
-      angular_vel_max_ = parameter.get_value<double>();
-    }
-    else
-    {
-      result.successful = false;
-      result.reason = "unknown parameter";
-      break;
-    }
-  }
-
-  return result;
 }
 
 /*****************************************************************************
@@ -425,9 +355,11 @@ void KeyOp::incrementLinearVelocity()
 {
   if (power_status_)
   {
-    if (cmd_->linear.x <= linear_vel_max_)
+    double linear_vel_max = get_parameter("linear_vel_max").get_value<double>();
+    double linear_vel_step = get_parameter("linear_vel_step").get_value<double>();
+    if (cmd_->linear.x <= linear_vel_max)
     {
-      cmd_->linear.x += linear_vel_step_;
+      cmd_->linear.x += linear_vel_step;
     }
     RCLCPP_INFO(get_logger(), "KeyOp: linear  velocity incremented [%f|%f]", cmd_->linear.x, cmd_->angular.z);
   }
@@ -444,9 +376,11 @@ void KeyOp::decrementLinearVelocity()
 {
   if (power_status_)
   {
-    if (cmd_->linear.x >= -linear_vel_max_)
+    double linear_vel_max = get_parameter("linear_vel_max").get_value<double>();
+    double linear_vel_step = get_parameter("linear_vel_step").get_value<double>();
+    if (cmd_->linear.x >= -linear_vel_max)
     {
-      cmd_->linear.x -= linear_vel_step_;
+      cmd_->linear.x -= linear_vel_step;
     }
     RCLCPP_INFO(get_logger(), "KeyOp: linear  velocity decremented [%f|%f]", cmd_->linear.x, cmd_->angular.z);
   }
@@ -463,9 +397,11 @@ void KeyOp::incrementAngularVelocity()
 {
   if (power_status_)
   {
-    if (cmd_->angular.z <= angular_vel_max_)
+    double angular_vel_max = get_parameter("angular_vel_max").get_value<double>();
+    double angular_vel_step = get_parameter("angular_vel_step").get_value<double>();
+    if (cmd_->angular.z <= angular_vel_max)
     {
-      cmd_->angular.z += angular_vel_step_;
+      cmd_->angular.z += angular_vel_step;
     }
     RCLCPP_INFO(get_logger(), "KeyOp: angular velocity incremented [%f|%f]", cmd_->linear.x, cmd_->angular.z);
   }
@@ -482,9 +418,11 @@ void KeyOp::decrementAngularVelocity()
 {
   if (power_status_)
   {
-    if (cmd_->angular.z >= -angular_vel_max_)
+    double angular_vel_max = get_parameter("angular_vel_max").get_value<double>();
+    double angular_vel_step = get_parameter("angular_vel_step").get_value<double>();
+    if (cmd_->angular.z >= -angular_vel_max)
     {
-      cmd_->angular.z -= angular_vel_step_;
+      cmd_->angular.z -= angular_vel_step;
     }
     RCLCPP_INFO(get_logger(), "KeyOp: angular velocity decremented [%f|%f]", cmd_->linear.x, cmd_->angular.z);
   }
