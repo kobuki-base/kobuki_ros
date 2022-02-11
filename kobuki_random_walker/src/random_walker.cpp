@@ -15,6 +15,7 @@
 
 #include <geometry_msgs/msg/twist.hpp>
 #include <rclcpp/rclcpp.hpp>
+#include <rclcpp_components/register_node_macro.hpp>
 #include <std_msgs/msg/empty.hpp>
 
 #include <kobuki_ros_interfaces/msg/bumper_event.hpp>
@@ -350,3 +351,5 @@ void RandomWalkerNode::spin()
 }
 
 }  // namespace kobuki_random_walker
+
+RCLCPP_COMPONENTS_REGISTER_NODE(kobuki_random_walker::RandomWalkerNode)
