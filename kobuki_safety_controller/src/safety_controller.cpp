@@ -85,6 +85,8 @@ SafetyController::SafetyController(const rclcpp::NodeOptions & options) :
 
   msg_ = std::make_unique<geometry_msgs::msg::Twist>();
 
+  this->enable(); // enable controller
+
   timer_ = this->create_wall_timer(std::chrono::milliseconds(100), std::bind(&SafetyController::spin, this));
 }
 
