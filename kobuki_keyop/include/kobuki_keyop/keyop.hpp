@@ -50,7 +50,6 @@
 #include <memory>
 #include <mutex>
 #include <thread>
-#include <vector>
 
 #include <geometry_msgs/msg/twist.hpp>  // for velocity commands
 #include <rclcpp/rclcpp.hpp>

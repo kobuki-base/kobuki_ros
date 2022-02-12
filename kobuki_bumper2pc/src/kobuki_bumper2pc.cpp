@@ -15,7 +15,6 @@
 #include <functional>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include <rclcpp/parameter_events_filter.hpp>
