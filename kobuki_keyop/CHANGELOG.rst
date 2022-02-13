@@ -2,6 +2,19 @@
 Changelog for package kobuki_keyop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Minor cleanups of includes.
+* Update all of the package.xml versions.
+* Switch to auto-generating the executables for the components.
+* Remove unnecessary parameter callback from keyop. (`#33 <https://github.com/kobuki-base/kobuki_ros/issues/33>`_)
+* Remove unnecessary setvbuf from nodes. (`#31 <https://github.com/kobuki-base/kobuki_ros/issues/31>`_)
+* Make the keyop motor_power publisher transient local. (`#27 <https://github.com/kobuki-base/kobuki_ros/issues/27>`_)
+* [infra] eclipse
+* Install the parameter update callback. (`#7 <https://github.com/kobuki-base/kobuki_ros/issues/7>`_)
+* Port kobuki keyop to ROS 2. (`#3 <https://github.com/kobuki-base/kobuki_ros/issues/3>`_)
+* Contributors: Chris Lalancette, Daniel Stonier
+
 0.6.6 (2015-05-27)
 ------------------
 * Installed both C/C++ headers.

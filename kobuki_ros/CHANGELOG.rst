@@ -2,6 +2,11 @@
 Changelog for package kobuki_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update all of the package.xml versions.
+* Contributors: Chris Lalancette
+
 1.0.0 (2020-01-14)
 ------------------
 * first release on eloquent

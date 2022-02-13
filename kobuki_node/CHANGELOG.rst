@@ -4,9 +4,23 @@ Changelog for package kobuki_node
 
 Forthcoming
 -----------
-* [node] LegacyPose2D -> Vector3d, `#15 <https://github.com/kobuki-base/kobuki_ros/pull/15>`_
-* [node] ros_ prefixes dropped on slots, `#16 <https://github.com/kobuki-base/kobuki_ros/pull/16>`_
-* [node] ported to ros2
+* fixed kobuki_description (`#35 <https://github.com/kobuki-base/kobuki_ros/issues/35>`_)
+* Minor cleanups of includes.
+* Update all of the package.xml versions.
+* Switch to auto-generating the executables for the components.
+* Remove unnecessary setvbuf from nodes. (`#31 <https://github.com/kobuki-base/kobuki_ros/issues/31>`_)
+* [comms] followup fixes for ros\_ removal
+* [changelog] ros2 port, pose2d and ros\_ updates
+* [slots] ros\_ prefixes dropped in kobuki_core, updated here
+* [all] LegacyPose2d -> Vector3d
+* [infra] eclipse
+* [infra] update for kobuki_driver -> kobuki_core (`#14 <https://github.com/kobuki-base/kobuki_ros/issues/14>`_)
+* Publish the kobuki battery via BatteryState msg (`#12 <https://github.com/kobuki-base/kobuki_ros/issues/12>`_)
+* [infra] point website at the rtd release docs and add ChrisL to authors
+* Fix build on foxy and remove unused dependencies (`#10 <https://github.com/kobuki-base/kobuki_ros/issues/10>`_)
+* [all] make the kobuki base actually work (`#9 <https://github.com/kobuki-base/kobuki_ros/issues/9>`_)
+* WIP: Port the kobuki node to ROS 2. (`#4 <https://github.com/kobuki-base/kobuki_ros/issues/4>`_)
+* Contributors: Chris Lalancette, Daniel Stonier, Emerson Knapp, Waipot Ngamsaad
 
 0.7.6 (2018-03-14)
 ------------------
