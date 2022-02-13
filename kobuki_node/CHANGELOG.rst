@@ -1,5 +1,6 @@
-Kobuki Node
-===========
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package kobuki_node
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Forthcoming
 -----------
