@@ -2,8 +2,8 @@
 Changelog for package kobuki_keyop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2022-02-13)
+------------------
 * Minor cleanups of includes.
 * Update all of the package.xml versions.
 * Switch to auto-generating the executables for the components.

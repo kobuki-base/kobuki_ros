@@ -2,8 +2,8 @@
 Changelog for package kobuki_safety_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2022-02-13)
+------------------
 * Enable the safety controller by default.
 * Update all of the package.xml versions.
 * Switch to auto-generating the executables for the components.

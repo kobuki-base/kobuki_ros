@@ -2,8 +2,8 @@
 Changelog for package kobuki_auto_docking
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2022-02-13)
+------------------
 * fixed kobuki_description (`#35 <https://github.com/kobuki-base/kobuki_ros/issues/35>`_)
 * Update all of the package.xml versions.
 * Switch to auto-generating the executables for the components.

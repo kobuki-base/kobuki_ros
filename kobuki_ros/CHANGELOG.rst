@@ -2,8 +2,8 @@
 Changelog for package kobuki_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2022-02-13)
+------------------
 * Update all of the package.xml versions.
 * Contributors: Chris Lalancette
 

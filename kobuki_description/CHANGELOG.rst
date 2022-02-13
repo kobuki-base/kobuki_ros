@@ -2,8 +2,8 @@
 Changelog for package kobuki_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2022-02-13)
+------------------
 * fixed kobuki_description (`#35 <https://github.com/kobuki-base/kobuki_ros/issues/35>`_)
 * Make kobuki_description depend on ament_lint_auto. (`#21 <https://github.com/kobuki-base/kobuki_ros/issues/21>`_)
 * Change to ament package, remove COLCON_IGNORE, fix missing gazebo_ros_kobuki with off-the-shelf plugins (`#20 <https://github.com/kobuki-base/kobuki_ros/issues/20>`_)
