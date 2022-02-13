@@ -300,13 +300,13 @@ void SafetyController::spin()
     else
     {
       double time_to_extend_bump_cliff_events = this->get_parameter("time_to_extend_bump_cliff_events").get_value<double>();
-      rclcpp::Duration extend_bump_cliff_events_duration = rclcpp::Duration(time_to_extend_bump_cliff_events);
+      rclcpp::Duration extend_bump_cliff_events_duration = rclcpp::Duration::from_seconds(time_to_extend_bump_cliff_events);
       // if we want to extend the safety state and we're within the time, just keep sending msg_
       // TODO(clalancette): this is buggy in the case that time_to_extend_bump_cliff_events
       // is set to something > 0.  The very first time through this loop, we could end up
       // publishing an empty msg_ for no reason, since last_event_time ~= this->get_clock()->now().
       // Need to think about how to improve this.
-      if (extend_bump_cliff_events_duration > rclcpp::Duration(1e-10) &&
+      if (extend_bump_cliff_events_duration > rclcpp::Duration::from_seconds(1e-10) &&
           this->get_clock()->now() - last_event_time_ < extend_bump_cliff_events_duration)
       {
         velocity_command_publisher_->publish(*msg_);
