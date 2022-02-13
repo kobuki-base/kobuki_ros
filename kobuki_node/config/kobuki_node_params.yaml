@@ -7,7 +7,7 @@ kobuki_ros_node:
     device_port: /dev/ttyUSB0
     cmd_vel_timeout_sec: 0.6
     odom_frame: odom
-    base_frame: base
+    base_frame: base_footprint
     publish_tf: true
     use_imu_heading: true
     wheel_left_joint_name: wheel_left_joint

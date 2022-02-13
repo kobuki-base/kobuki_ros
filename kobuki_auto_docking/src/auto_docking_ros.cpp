@@ -114,7 +114,7 @@ rclcpp_action::CancelResponse AutoDockingROS::handle_cancel(
   auto result_ = std::make_shared<AutoDocking::Result>();
   result_->text = "Cancelled: Cancel requested.";
   goal_handle->canceled(result_);
-  RCLCPP_INFO(this->get_logger(), "Result: %s", result_->text);
+  RCLCPP_INFO(this->get_logger(), "Result: %s", result_->text.c_str());
 
   return rclcpp_action::CancelResponse::ACCEPT;
 }
@@ -142,7 +142,7 @@ void AutoDockingROS::execute(
       RCLCPP_INFO(this->get_logger(), "goal_handle->is_canceling()");
       result_->text = "Cancelled: Cancel requested.";
       goal_handle->canceled(result_);
-      RCLCPP_INFO(this->get_logger(), "[kobuki_auto_docking] %s", result_->text);
+      RCLCPP_INFO(this->get_logger(), "[kobuki_auto_docking] %s", result_->text.c_str());
       dock_.disable();
       return;
     } else if (!dock_.isEnabled()) {  // Action Server is activated, but DockDrive is not enabled, or disabled unexpectedly

@@ -48,7 +48,7 @@
         <origin xyz="0.01 0 0"/>
         <mass value="2.4"/> <!-- 2.4/2.6 kg for small/big battery pack -->
         <!-- Kobuki's inertia tensor is approximated by a cylinder with homogeneous mass distribution
-             More details: http://en.wikipedia.org/wiki/List_of_moment_of_inertia_tensors
+             More details http://en.wikipedia.org/wiki/List_of_moment_of_inertia_tensors
              m = 2.4 kg; h = 0.09 m; r = 0.175 m
              ixx = 1/12 * m * (3 * r^2 + h^2)
              iyy = 1/12 * m * (3 * r^2 + h^2)
