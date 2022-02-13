@@ -27,6 +27,7 @@ ament_target_dependencies(kobuki_random_walker
   "geometry_msgs"
   "kobuki_ros_interfaces"
   "rclcpp"
+  "rclcpp_components"
   "std_msgs"
 )
 
