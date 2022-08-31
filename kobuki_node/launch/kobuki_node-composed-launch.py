@@ -18,15 +18,15 @@ def generate_launch_description():
     with open(params_file, 'r') as f:
         params = yaml.safe_load(f)['kobuki_ros_node']['ros__parameters']
     container = ComposableNodeContainer(
-            node_name='kobuki_node_container',
-            node_namespace='',
+            name='kobuki_node_container',
+            namespace='',
             package='rclcpp_components',
-            node_executable='component_container',
+            executable='component_container',
             composable_node_descriptions=[
                 ComposableNode(
                     package='kobuki_node',
-                    node_plugin='kobuki_node::KobukiRos',
-                    node_name='kobuki_ros_node',
+                    plugin='kobuki_node::KobukiRos',
+                    name='kobuki_ros_node',
                     parameters=[params]),
             ],
             output='both',
