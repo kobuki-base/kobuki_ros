@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
-<robot name="kobuki_sim" xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="kobuki_sim">
+<robot name="kobuki" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="kobuki">
 	  <gazebo reference="wheel_left_link">
 	    <mu1>1.0</mu1>
 	    <mu2>1.0</mu2>
@@ -148,7 +148,7 @@
 	   <sensor type="imu" name="imu">
         <plugin name="gazebo_ros_imu_controller" filename="libgazebo_ros_imu_sensor.so">
           <ros>
-            <argument>~/out:=imu</argument>
+            <xacro:argument>~/out:=imu</xacro:argument>
           </ros>
           <output_type>sensor_msgs/msg/Imu</output_type>
           <body_name>gyro_link</body_name>
