@@ -44,7 +44,7 @@
     <visual>
       <geometry>
         <!-- new mesh -->
-        <mesh filename="model://kobuki_ros/meshes/main_body.dae"/>
+        <mesh filename="model://kobuki_description/meshes/main_body.dae"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0.001 0 0.05199"/>
     </visual>
@@ -78,7 +78,7 @@
   <link name="wheel_left_link">
     <visual>
       <geometry>
-        <mesh filename="model://kobuki_ros/meshes/wheel.dae"/>
+        <mesh filename="model://kobuki_description/meshes/wheel.dae"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
@@ -103,7 +103,7 @@
   <link name="wheel_right_link">
     <visual>
       <geometry>
-        <mesh filename="model://kobuki_ros/meshes/wheel.dae"/>
+        <mesh filename="model://kobuki_description/meshes/wheel.dae"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
@@ -313,7 +313,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/hexagons/plate_bottom.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/hexagons/plate_bottom.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -341,7 +341,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/hexagons/plate_middle.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/hexagons/plate_middle.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -371,7 +371,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/hexagons/plate_top.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/hexagons/plate_top.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -407,7 +407,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.015 0.0035 0.004"/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/sensors/xtion_pro_camera.dae"/>
+        <mesh filename="package://kobuki_description/meshes/sensors/xtion_pro_camera.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -446,7 +446,7 @@
     <visual>
       <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/sensors/xtion_pro_stack.dae"/>
+        <mesh filename="package://kobuki_description/meshes/sensors/xtion_pro_stack.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -475,7 +475,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -499,7 +499,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -523,7 +523,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -547,7 +547,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -571,7 +571,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -595,7 +595,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -619,7 +619,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -643,7 +643,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -667,7 +667,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -691,7 +691,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -715,7 +715,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -739,7 +739,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -763,7 +763,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -787,7 +787,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -811,7 +811,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04556-RA_Kinect_Standoff_Assy.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04556-RA_Kinect_Standoff_Assy.dae"/>
       </geometry>
     </visual>
     <collision>
@@ -835,7 +835,7 @@
     <visual>
       <origin rpy="0 0 0" xyz=" 0 0 0 "/>
       <geometry>
-        <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04556-RA_Kinect_Standoff_Assy.dae"/>
+        <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04556-RA_Kinect_Standoff_Assy.dae"/>
       </geometry>
     </visual>
     <collision>
