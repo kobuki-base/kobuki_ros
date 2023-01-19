@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot name="sensor_asus_xtion_pro" xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:include filename="$(find kobuki_ros)/urdf/turtlebot_gazebo.urdf.xacro"/>
-  <xacro:include filename="$(find kobuki_ros)/urdf/turtlebot_properties.urdf.xacro"/>
+  <xacro:include filename="$(find kobuki_description)/urdf/turtlebot_gazebo.urdf.xacro"/>
+  <xacro:include filename="$(find kobuki_description)/urdf/turtlebot_properties.urdf.xacro"/>
   
   <!-- Xacro properties -->
   <xacro:property name="M_SCALE" value="0.001"/>
@@ -36,7 +36,7 @@
       <visual>
         <origin xyz="-0.015 0.0035 0.004" rpy="0 0 0"/>
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/sensors/xtion_pro_camera.dae"/>
+          <mesh filename="package://kobuki_description/meshes/sensors/xtion_pro_camera.dae"/>
         </geometry>
       </visual>
       <collision>
@@ -82,7 +82,7 @@
       <visual>
         <origin xyz="0 0 0" rpy="${-M_PI/2} 0 0"/>
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/sensors/xtion_pro_stack.dae"/>
+          <mesh filename="package://kobuki_description/meshes/sensors/xtion_pro_stack.dae"/>
         </geometry>
       </visual>  
       <collision>

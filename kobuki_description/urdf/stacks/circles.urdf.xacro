@@ -20,7 +20,7 @@
       <visual>
         <origin xyz=" 0 0 0 " rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-02403-125_Spacer.dae"/>
+          <mesh filename="package://kobuki_description/meshes/stacks/circles/68-02403-125_Spacer.dae"/>
         </geometry>
       </visual>
 
@@ -52,7 +52,7 @@
       <visual>
         <origin xyz=" 0 0 0 " rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
+          <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-1000-RA_Turtlebot_M-F_Standoff.dae"/>
         </geometry>
       </visual>
 
@@ -84,7 +84,7 @@
       <visual>
         <origin xyz=" 0 0 0 " rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
+          <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04552-2000-RA_Turtlebot_M-F_Standoff.dae"/>
         </geometry>
       </visual>
 
@@ -117,7 +117,7 @@
       <visual>
         <origin xyz=" 0 0 0 " rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
+          <mesh filename="package://kobuki_description/meshes/stacks/circles/68-02421-8000-RA_Turtlebot_F-F_Standoff.dae"/>
         </geometry>
       </visual>
 
@@ -149,7 +149,7 @@
       <visual>
         <origin xyz=" 0 0 0 " rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/stacks/circles/68-04556-RA_Kinect_Standoff_Assy.dae"/>
+          <mesh filename="package://kobuki_description/meshes/stacks/circles/68-04556-RA_Kinect_Standoff_Assy.dae"/>
         </geometry>
       </visual>
 
@@ -187,7 +187,7 @@
       <visual>
         <origin xyz=" 0 0 0 " rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/stacks/circles/plate_0_logo.dae"/>
+          <mesh filename="package://kobuki_description/meshes/stacks/circles/plate_0_logo.dae"/>
         </geometry>
       </visual>
 
@@ -222,7 +222,7 @@
       <visual>
         <origin xyz=" 0 0 0 " rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/stacks/circles/plate_1_logo.dae"/>
+          <mesh filename="package://kobuki_description/meshes/stacks/circles/plate_1_logo.dae"/>
         </geometry>
       </visual>
 
@@ -257,7 +257,7 @@
       <visual>
         <origin xyz=" 0 0 0 " rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/stacks/circles/plate_1_logo.dae"/>
+          <mesh filename="package://kobuki_description/meshes/stacks/circles/plate_1_logo.dae"/>
         </geometry>
       </visual>
 
@@ -295,7 +295,7 @@
       <visual>
         <origin xyz=" 0 0 0 " rpy="0 0 0" />
         <geometry>
-          <mesh filename="package://kobuki_ros/meshes/stacks/circles/plate_2_logo.dae"/>
+          <mesh filename="package://kobuki_description/meshes/stacks/circles/plate_2_logo.dae"/>
         </geometry>
       </visual>
 
