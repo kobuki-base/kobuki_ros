@@ -16,6 +16,13 @@
     
     http://www.ros.org/reps/rep-0119.html
    -->
+  <!-- 
+    These properties must be observed by any machine
+    that wants to be defined as a turtlebot. Refer
+    to the REP for more details.
+    
+    http://www.ros.org/reps/rep-0119.html
+   -->
   <link name="base_footprint"/>
   <!--
        Base link is set at the bottom of the base mould.
@@ -304,7 +311,56 @@
       <inertia ixx="0.003328" ixy="0.0" ixz="0.0" iyy="0.003328" iyz="0.0" izz="0.006656"/>
     </inertial>
   </link>
-  <!-- <xacro:sensor_astra          parent="base_link"/> -->
+  <joint name="camera_rgb_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.13 -0.0125 0.23"/>
+    <parent link="base_link"/>
+    <child link="camera_rgb_frame"/>
+  </joint>
+  <link name="camera_rgb_frame"/>
+  <joint name="camera_rgb_optical_joint" type="fixed">
+    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
+    <parent link="camera_rgb_frame"/>
+    <child link="camera_rgb_optical_frame"/>
+  </joint>
+  <link name="camera_rgb_optical_frame"/>
+  <joint name="camera_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 -0.0125 0"/>
+    <parent link="camera_rgb_frame"/>
+    <child link="camera_link"/>
+  </joint>
+  <link name="camera_link">
+    <visual>
+      <origin rpy="1.5707963267948966 0 1.5707963267948966" xyz="-0.04 0.02 -0.01"/>
+      <geometry>
+        <mesh filename="package://kobuki_description/meshes/sensors/astra.dae" scale="0.7 0.7 0.7"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <box size="0.0400 0.1650 0.0300"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.564"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.003881243" ixy="0.0" ixz="0.0" iyy="0.000498940" iyz="0.0" izz="0.003879257"/>
+    </inertial>
+  </link>
+  <joint name="camera_depth_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0.025 0"/>
+    <parent link="camera_rgb_frame"/>
+    <child link="camera_depth_frame"/>
+  </joint>
+  <link name="camera_depth_frame"/>
+  <joint name="camera_depth_optical_joint" type="fixed">
+    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
+    <parent link="camera_depth_frame"/>
+    <child link="camera_depth_optical_frame"/>
+  </joint>
+  <link name="camera_depth_optical_frame"/>
+  <!-- RGBD sensor for simulation, same as Kinect -->
+  <turtlebot_sim_3dsensor/>
   <joint name="standoff_1in_0_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.12 0.082 0.09"/>
     <parent link="base_link"/>

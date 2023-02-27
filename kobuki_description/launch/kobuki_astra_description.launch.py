@@ -45,27 +45,10 @@ def generate_launch_description():
         name='joint_state_publisher'
     )
 
-    # Spawn
-    spawn_entity_node = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        name='entity_spawner',
-        output='screen',
-        arguments=["-topic", "/robot_description", "-entity", "kobuki"]
-    )
-
-    tf_footprint2base_cmd = Node( package='tf2_ros', executable='static_transform_publisher', output='screen',
-            arguments=['0.0', '0.0', '0.01',
-                    '-1.56', '0.0', '-1.56',
-                    'base_link',
-                    'base_footprint'])
-
     ld = LaunchDescription()
 
     # Add any actions
     ld.add_action(robot_model)
     ld.add_action(joint_state_publisher_node)
-    ld.add_action(spawn_entity_node)
-    ld.add_action(tf_footprint2base_cmd)
 
     return ld
