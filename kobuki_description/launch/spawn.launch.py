@@ -25,7 +25,7 @@ def generate_launch_description():
 
     kobuki_pkg = get_package_share_directory('kobuki_description')
 
-    urdf_file = os.path.join(kobuki_pkg, 'urdf', 'kobuki_astra.urdf')
+    urdf_file = os.path.join(kobuki_pkg, 'urdf', 'kobuki_gazebo.urdf')
 
     with open(urdf_file, 'r') as info:
         robot_desc = info.read()
