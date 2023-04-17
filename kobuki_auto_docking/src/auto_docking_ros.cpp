@@ -103,18 +103,11 @@ rclcpp_action::CancelResponse AutoDockingROS::handle_cancel(
 {
   (void)goal_handle;
 
-  // (Bug) The program crashed after terminating (Ctrl+C) the activate.sh
-  // info: terminate called after throwing an instance of 'rclcpp::exceptions::RCLError'
   RCLCPP_INFO(this->get_logger(), "Received request to cancel goal");
 
   if (dock_.isEnabled()) {
     dock_.disable();
   }
-
-  auto result_ = std::make_shared<AutoDocking::Result>();
-  result_->text = "Cancelled: Cancel requested.";
-  goal_handle->canceled(result_);
-  RCLCPP_INFO(this->get_logger(), "Result: %s", result_->text.c_str());
 
   return rclcpp_action::CancelResponse::ACCEPT;
 }
