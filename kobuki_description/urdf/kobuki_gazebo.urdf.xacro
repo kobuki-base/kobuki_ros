@@ -258,12 +258,7 @@
       <baseline>0.2</baseline>
       <alwaysOn>true</alwaysOn>
       <updateRate>1.0</updateRate>
-      <imageTopicName>/camera/color/image_raw</imageTopicName>
-      <cameraInfoTopicName>/camera/color/camera_info</cameraInfoTopicName>
-      <depthImageTopicName>/camera/depth/image_raw</depthImageTopicName>
-      <depthImageInfoTopicName>/camera/depth/camera_info</depthImageInfoTopicName>
-      <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
-      <frameName>camera_depth_frame</frameName>
+      <frame_Name>camera_link</frame_Name>
       <pointCloudCutoff>0.5</pointCloudCutoff>
       <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
       <distortionK1>0.00000001</distortionK1>

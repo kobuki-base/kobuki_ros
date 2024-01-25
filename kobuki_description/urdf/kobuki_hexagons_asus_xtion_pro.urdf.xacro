@@ -9,12 +9,12 @@
   <xacro:include filename="$(find kobuki_description)/urdf/turtlebot_common_library.urdf.xacro" />
   <xacro:include filename="$(find kobuki_description)/urdf/kobuki_gazebo.urdf.xacro" />
   <xacro:include filename="$(find kobuki_description)/urdf/stacks/hexagons.urdf.xacro"/>
-  <xacro:include filename="$(find kobuki_description)/urdf/sensors/asus_xtion_pro.urdf.xacro"/>
+  <xacro:include filename="$(find kobuki_description)/urdf/sensors/asus_xtion_pro_offset.urdf.xacro"/>
   <xacro:include filename="$(find kobuki_description)/urdf/stacks/circles.urdf.xacro"/>
   
   <xacro:kobuki/>
   <xacro:stack_hexagons                 parent="base_link"/>
-  <xacro:sensor_asus_xtion_pro          parent="base_link"/>
+  <xacro:sensor_asus_xtion_pro_offset   parent="base_link"/>
  
   <xacro:turtlebot_standoff_1in number="0" parent="base_link" x_loc="0.120" y_loc="0.082" z_loc="0.09"/>
   <xacro:turtlebot_standoff_1in number="1" parent="base_link" x_loc="0.055" y_loc="0.120" z_loc="0.09"/>
