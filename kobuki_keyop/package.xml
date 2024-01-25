@@ -31,7 +31,6 @@
   <exec_depend>rclcpp_components</exec_depend>
 
   <!-- Kobuki -->
-  <exec_depend>cmd_vel_mux</exec_depend>
   <exec_depend>kobuki_ros_interfaces</exec_depend>
   <exec_depend>kobuki_velocity_smoother</exec_depend>
 
