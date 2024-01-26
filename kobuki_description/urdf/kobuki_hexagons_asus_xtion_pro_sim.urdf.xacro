@@ -7,7 +7,7 @@
 <robot name="kobuki" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:include filename="$(find kobuki_description)/urdf/turtlebot_common_library.urdf.xacro" />
-  <xacro:include filename="$(find kobuki_description)/urdf/kobuki.urdf.xacro" />
+  <xacro:include filename="$(find kobuki_description)/urdf/kobuki_gazebo.urdf.xacro" />
   <xacro:include filename="$(find kobuki_description)/urdf/stacks/hexagons.urdf.xacro"/>
   <xacro:include filename="$(find kobuki_description)/urdf/sensors/asus_xtion_pro_offset.urdf.xacro"/>
   <xacro:include filename="$(find kobuki_description)/urdf/stacks/circles.urdf.xacro"/>

@@ -16,27 +16,24 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
-from launch.actions import SetEnvironmentVariable
+import launch_ros.descriptions
+from launch.substitutions import Command
 
 def generate_launch_description():
 
     kobuki_pkg = get_package_share_directory('kobuki_description')
 
-    urdf_file = os.path.join(kobuki_pkg, 'urdf', 'kobuki.urdf')
-
-    with open(urdf_file, 'r') as info:
-        robot_desc = info.read()
+    urdf_xacro_file = os.path.join(kobuki_pkg, 'urdf', 'kobuki_hexagons_asus_xtion_pro.urdf.xacro')
 
     # Robot description
     robot_model = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
-        parameters=[{'robot_description': robot_desc}],
-        arguments=[urdf_file]
-    )
+        parameters=[{'robot_description': launch_ros.descriptions.ParameterValue(
+                Command(['xacro ', urdf_xacro_file]), value_type=str),}
+    ])
 
     # TF Tree
     joint_state_publisher_node = Node(
