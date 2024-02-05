@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+    - Base      : kobuki
+    - Stacks    : hexagons
+    - 3d Sensor : kinect
+-->    
+<robot name="kobuki" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find kobuki_description)/urdf/turtlebot_common_library.urdf.xacro" />
+  <xacro:include filename="$(find kobuki_description)/urdf/kobuki_gazebo.urdf.xacro" />
+  <xacro:include filename="$(find kobuki_description)/urdf/stacks/hexagons.urdf.xacro"/>
+  <xacro:include filename="$(find kobuki_description)/urdf/sensors/asus_xtion_pro_offset.urdf.xacro"/>
+  <xacro:include filename="$(find kobuki_description)/urdf/stacks/circles.urdf.xacro"/>
+  
+  <xacro:kobuki/>
+  <xacro:stack_hexagons                 parent="base_link"/>
+  <xacro:sensor_asus_xtion_pro_offset   parent="base_link"/>
+ 
+  <xacro:turtlebot_standoff_1in number="0" parent="base_link" x_loc="0.120" y_loc="0.082" z_loc="0.09"/>
+  <xacro:turtlebot_standoff_1in number="1" parent="base_link" x_loc="0.055" y_loc="0.120" z_loc="0.09"/>
+  <xacro:turtlebot_standoff_1in number="2" parent="base_link" x_loc="-0.055" y_loc="0.120" z_loc="0.09"/>
+  <xacro:turtlebot_standoff_1in number="3" parent="base_link" x_loc="0.120" y_loc="-0.082" z_loc="0.09"/>
+  <xacro:turtlebot_standoff_1in number="4" parent="base_link" x_loc="0.055" y_loc="-0.120" z_loc="0.09"/>
+  <xacro:turtlebot_standoff_1in number="5" parent="base_link" x_loc="-0.055" y_loc="-0.120" z_loc="0.09"/>
+  <xacro:turtlebot_standoff_2in number="0" parent="base_link" x_loc="0.0381" y_loc="0.1505" z_loc="0.1340"/>
+  <xacro:turtlebot_standoff_2in number="1" parent="base_link" x_loc="0.0381" y_loc="-0.1505" z_loc="0.1340"/>
+  <xacro:turtlebot_standoff_2in number="2" parent="base_link" x_loc="-0.0381" y_loc="0.1505" z_loc="0.1340"/>
+  <xacro:turtlebot_standoff_2in number="3" parent="base_link" x_loc="-0.0381" y_loc="-0.1505" z_loc="0.1340"/>
+  <xacro:turtlebot_standoff_8in number="0" parent="base_link" x_loc="0.0381" y_loc="0.1505" z_loc="0.1900"/>
+  <xacro:turtlebot_standoff_8in number="1" parent="base_link" x_loc="0.0381" y_loc="-0.1505" z_loc="0.1900"/>
+  <xacro:turtlebot_standoff_8in number="2" parent="base_link" x_loc="-0.0381" y_loc="0.1505" z_loc="0.1900"/>
+  <xacro:turtlebot_standoff_8in number="3" parent="base_link" x_loc="-0.0381" y_loc="-0.1505" z_loc="0.1900"/>
+  <xacro:turtlebot_standoff_kinect number="0" parent="base_link" x_loc="-0.1024" y_loc="0.098" z_loc="0.1872"/>
+  <xacro:turtlebot_standoff_kinect number="1" parent="base_link" x_loc="-0.1024" y_loc="-0.098" z_loc="0.1872"/>
+  
+</robot>

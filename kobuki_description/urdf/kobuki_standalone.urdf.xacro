@@ -7,5 +7,8 @@
 
   <!-- Defines the kobuki component tag. -->
   <xacro:include filename="$(find kobuki_description)/urdf/kobuki.urdf.xacro" />
+  <xacro:include filename="$(find kobuki_description)/urdf/turtlebot_common_library.urdf.xacro" />
+  <xacro:include filename="$(find kobuki_description)/urdf/stacks/hexagons.urdf.xacro"/>
+  <xacro:include filename="$(find kobuki_description)/urdf/sensors/asus_xtion_pro.urdf.xacro"/>
   <xacro:kobuki/>
 </robot>
