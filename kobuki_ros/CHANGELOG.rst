@@ -2,6 +2,12 @@
 Changelog for package kobuki_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix the changelog headers to the standard ROS ones. (`#38 <https://github.com/kobuki-base/kobuki_ros/issues/38>`_)
+* Update all of the package.xml versions.
+* Contributors: Chris Lalancette
+
 1.0.0 (2020-01-14)
 ------------------
 * first release on eloquent

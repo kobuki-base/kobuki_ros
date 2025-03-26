@@ -2,6 +2,18 @@
 Changelog for package kobuki_auto_docking
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix a warning about a deprected tf2 header. (`#39 <https://github.com/kobuki-base/kobuki_ros/issues/39>`_)
+* canceling the goal without crashing the node (`#48 <https://github.com/kobuki-base/kobuki_ros/issues/48>`_)
+* Fix the changelog headers to the standard ROS ones. (`#38 <https://github.com/kobuki-base/kobuki_ros/issues/38>`_)
+* fixed kobuki_description (`#35 <https://github.com/kobuki-base/kobuki_ros/issues/35>`_)
+* Update all of the package.xml versions.
+* Switch to auto-generating the executables for the components.
+* port kobuki_auto_docking to ROS2 (`#28 <https://github.com/kobuki-base/kobuki_ros/issues/28>`_)
+* [all] LegacyPose2d -> Vector3d
+* Contributors: CaroteFreddy, Chris Lalancette, Daniel Stonier, Waipot Ngamsaad
+
 0.7.5 (2017-12-29)
 ------------------
 * bugfix missing nav_msgs dependency

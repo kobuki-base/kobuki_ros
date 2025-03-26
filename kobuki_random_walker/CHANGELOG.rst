@@ -2,6 +2,16 @@
 Changelog for package kobuki_random_walker
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Make random_walker depend on rclcpp_components. (`#36 <https://github.com/kobuki-base/kobuki_ros/issues/36>`_)
+* Register the random_walker node.
+* Update all of the package.xml versions.
+* Switch to auto-generating the executables for the components.
+* Port random_walker to ROS 2. (`#26 <https://github.com/kobuki-base/kobuki_ros/issues/26>`_)
+* [infra] eclipse
+* Contributors: Chris Lalancette, Daniel Stonier
+
 0.6.6 (2015-05-27)
 ------------------
 

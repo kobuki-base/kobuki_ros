@@ -2,6 +2,17 @@
 Changelog for package kobuki_bumper2pc
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Minor cleanups of includes.
+* Update all of the package.xml versions.
+* Switch to auto-generating the executables for the components.
+* Add a kobuki_bumper2pc node. (`#32 <https://github.com/kobuki-base/kobuki_ros/issues/32>`_)
+* Use the parameters database in bumper2pc. (`#30 <https://github.com/kobuki-base/kobuki_ros/issues/30>`_)
+* Switch from param callback to events in bumper2pc
+* Port bumper2pc to ROS 2. (`#25 <https://github.com/kobuki-base/kobuki_ros/issues/25>`_)
+* Contributors: Chris Lalancette
+
 0.6.6 (2015-05-27)
 ------------------
 
