@@ -2,8 +2,8 @@
 Changelog for package kobuki_auto_docking
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2025-03-26)
+------------------
 * Fix a warning about a deprected tf2 header. (`#39 <https://github.com/kobuki-base/kobuki_ros/issues/39>`_)
 * canceling the goal without crashing the node (`#48 <https://github.com/kobuki-base/kobuki_ros/issues/48>`_)
 * Fix the changelog headers to the standard ROS ones. (`#38 <https://github.com/kobuki-base/kobuki_ros/issues/38>`_)

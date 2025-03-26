@@ -2,8 +2,8 @@
 Changelog for package kobuki_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2025-03-26)
+------------------
 * Fix the changelog headers to the standard ROS ones. (`#38 <https://github.com/kobuki-base/kobuki_ros/issues/38>`_)
 * Change kobuki_description version to match the others. (`#37 <https://github.com/kobuki-base/kobuki_ros/issues/37>`_)
 * fixed kobuki_description (`#35 <https://github.com/kobuki-base/kobuki_ros/issues/35>`_)

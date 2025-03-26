@@ -2,8 +2,8 @@
 Changelog for package kobuki_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2025-03-26)
+------------------
 * Fix the changelog headers to the standard ROS ones. (`#38 <https://github.com/kobuki-base/kobuki_ros/issues/38>`_)
 * Update all of the package.xml versions.
 * Contributors: Chris Lalancette

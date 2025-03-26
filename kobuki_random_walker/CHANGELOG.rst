@@ -2,8 +2,8 @@
 Changelog for package kobuki_random_walker
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2025-03-26)
+------------------
 * Make random_walker depend on rclcpp_components. (`#36 <https://github.com/kobuki-base/kobuki_ros/issues/36>`_)
 * Register the random_walker node.
 * Update all of the package.xml versions.

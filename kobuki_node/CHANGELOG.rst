@@ -2,8 +2,8 @@
 Changelog for package kobuki_node
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2025-03-26)
+------------------
 * [kobuki_ros] Fix pessimizing-move error by removing std::move() of a temporary object (`#50 <https://github.com/kobuki-base/kobuki_ros/issues/50>`_)
 * Fix launch (`#44 <https://github.com/kobuki-base/kobuki_ros/issues/44>`_)
 * Small fixes for Rolling. (`#24 <https://github.com/kobuki-base/kobuki_ros/issues/24>`_)

@@ -2,8 +2,8 @@
 Changelog for package kobuki_bumper2pc
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2025-03-26)
+------------------
 * Minor cleanups of includes.
 * Update all of the package.xml versions.
 * Switch to auto-generating the executables for the components.

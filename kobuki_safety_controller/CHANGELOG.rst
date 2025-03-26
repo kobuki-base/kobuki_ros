@@ -2,8 +2,8 @@
 Changelog for package kobuki_safety_controller
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2025-03-26)
+------------------
 * Small fixes for Rolling. (`#24 <https://github.com/kobuki-base/kobuki_ros/issues/24>`_)
 * Enable the safety controller by default.
 * Update all of the package.xml versions.

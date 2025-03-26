@@ -2,8 +2,8 @@
 Changelog for package kobuki_keyop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2025-03-26)
+------------------
 * renaming velocity_smoother dependency (`#45 <https://github.com/kobuki-base/kobuki_ros/issues/45>`_)
 * Minor cleanups of includes.
 * Update all of the package.xml versions.
