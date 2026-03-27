@@ -718,7 +718,7 @@ void KobukiRos::publishBatteryState()
   msg->power_supply_technology = sensor_msgs::msg::BatteryState::POWER_SUPPLY_TECHNOLOGY_LION;
   msg->location = "";
   msg->serial_number = "";
-  msg->percentage = battery.percent();
+  msg->percentage = battery.percent() * 0.01f;
   msg->present = true;
   battery_state_publisher_->publish(std::move(msg));
 }
